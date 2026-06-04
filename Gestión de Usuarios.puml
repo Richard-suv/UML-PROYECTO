@@ -1,0 +1,58 @@
+@startuml
+
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+
+title Bounded Context - Gestión de Usuarios
+
+class Usuario {
+
++idUsuario : int
++nombre : String
++apellido : String
++correo : String
++telefono : String
++password : String
++rol : String
+
+--
++registrarse()
++iniciarSesion()
++cerrarSesion()
++editarPerfil()
+
+}
+
+class Perfil {
+
++idPerfil : int
++foto : String
++descripcion : String
++reputacion : double
+
+}
+
+class Autenticacion {
+
++idAuth : int
++correoInstitucional : String
++codigoVerificacion : String
+
+--
++validarCorreo()
++recuperarPassword()
+
+}
+
+class Administrador {
+
++gestionarUsuarios()
++suspenderUsuario()
+
+}
+
+Usuario "1" --> "1" Perfil
+Usuario "1" --> "1" Autenticacion
+Administrador --|> Usuario
+
+@enduml

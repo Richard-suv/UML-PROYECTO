@@ -1,0 +1,89 @@
+@startuml
+left to right direction
+
+skinparam backgroundColor white
+skinparam packageStyle rectangle
+
+skinparam actor {
+BackgroundColor #D6EAF8
+BorderColor #1B4F72
+}
+
+skinparam usecase {
+BackgroundColor #EBF5FB
+BorderColor #1B4F72
+}
+
+actor Pasajero
+actor Conductor
+actor Administrador
+
+rectangle "Sistema RutaFlex" {
+
+package "Autenticación" {
+
+usecase "Registrarse" as UC1
+usecase "Iniciar sesión" as UC2
+usecase "Validar identidad" as UC13
+
+}
+
+package "Gestión de Viajes" {
+
+usecase "Buscar viaje" as UC3
+usecase "Ver detalles del viaje" as UC4
+usecase "Publicar ruta" as UC5
+usecase "Editar ruta" as UC6
+usecase "Cancelar viaje" as UC7
+
+}
+
+package "Comunicación" {
+
+usecase "Chatear con usuarios" as UC8
+usecase "Compartir ubicación" as UC12
+
+}
+
+package "Reputación e Historial" {
+
+usecase "Calificar usuarios" as UC9
+usecase "Ver historial de viajes" as UC10
+usecase "Visualizar ahorro" as UC11
+
+}
+
+package "Administración" {
+
+usecase "Gestionar usuarios" as UC14
+
+}
+
+}
+
+Pasajero --> UC1
+Pasajero --> UC2
+Pasajero --> UC3
+Pasajero --> UC4
+Pasajero --> UC8
+Pasajero --> UC9
+Pasajero --> UC10
+Pasajero --> UC11
+
+Conductor --> UC1
+Conductor --> UC2
+Conductor --> UC5
+Conductor --> UC6
+Conductor --> UC7
+Conductor --> UC8
+Conductor --> UC12
+Conductor --> UC10
+
+Administrador --> UC13
+Administrador --> UC14
+
+UC3 .> UC4 : <<include>>
+UC5 .> UC12 : <<include>>
+UC9 .> UC10 : <<extend>>
+
+@enduml

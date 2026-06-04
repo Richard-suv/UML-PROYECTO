@@ -1,0 +1,125 @@
+@startuml
+
+skinparam backgroundColor white
+
+skinparam entity {
+BackgroundColor #EBF5FB
+BorderColor #1B4F72
+FontColor black
+}
+
+title Diagrama de Base de Datos - RutaFlex
+
+entity Usuarios {
+
+* id_usuario : INT <<PK>>
+  --
+  nombre : VARCHAR
+  apellido : VARCHAR
+  correo : VARCHAR
+  telefono : VARCHAR
+  password : VARCHAR
+  rol : VARCHAR
+  reputacion : DOUBLE
+
+}
+
+entity Viajes {
+
+* id_viaje : INT <<PK>>
+  --
+  origen : VARCHAR
+  destino : VARCHAR
+  fecha : DATE
+  hora_salida : DATETIME
+  cupos : INT
+  estado : VARCHAR
+  costo : DOUBLE
+  id_conductor : INT <<FK>>
+
+}
+
+entity Rutas {
+
+* id_ruta : INT <<PK>>
+  --
+  punto_inicio : VARCHAR
+  punto_fin : VARCHAR
+  distancia : DOUBLE
+  tiempo_estimado : DOUBLE
+  id_viaje : INT <<FK>>
+
+}
+
+entity Mensajes {
+
+* id_mensaje : INT <<PK>>
+  --
+  contenido : TEXT
+  fecha_envio : DATETIME
+  id_emisor : INT <<FK>>
+  id_receptor : INT <<FK>>
+
+}
+
+entity Calificaciones {
+
+* id_calificacion : INT <<PK>>
+  --
+  puntaje : INT
+  comentario : TEXT
+  fecha : DATE
+  id_usuario : INT <<FK>>
+
+}
+
+entity Historial {
+
+* id_historial : INT <<PK>>
+  --
+  fecha_viaje : DATE
+  ahorro_generado : DOUBLE
+  co2_reducido : DOUBLE
+  id_usuario : INT <<FK>>
+  id_viaje : INT <<FK>>
+
+}
+
+entity Notificaciones {
+
+* id_notificacion : INT <<PK>>
+  --
+  mensaje : TEXT
+  tipo : VARCHAR
+  fecha_envio : DATETIME
+  estado : VARCHAR
+  id_usuario : INT <<FK>>
+
+}
+
+entity Reportes {
+
+* id_reporte : INT <<PK>>
+  --
+  descripcion : TEXT
+  fecha_reporte : DATE
+  estado : VARCHAR
+  id_usuario : INT <<FK>>
+
+}
+
+' =========================
+' RELACIONES
+' =========================
+
+Usuarios ||--o{ Viajes : publica
+Usuarios ||--o{ Mensajes : envia
+Usuarios ||--o{ Calificaciones : recibe
+Usuarios ||--o{ Historial : posee
+Usuarios ||--o{ Notificaciones : recibe
+Usuarios ||--o{ Reportes : genera
+
+Viajes ||--|| Rutas : contiene
+Viajes ||--o{ Historial : registra
+
+@enduml

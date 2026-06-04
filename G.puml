@@ -1,0 +1,87 @@
+@startuml
+
+
+title Diagrama de Despliegue - RutaFlex
+
+' CLIENT DEVICES
+
+node "Smartphone Usuario" as Smartphone {
+
+component "RutaFlex Mobile App" as MobileApp
+
+}
+
+node "Laptop / Navegador Web" as Browser {
+
+component "Landing Page" as LandingPage
+
+}
+
+' CLOUD INFRASTRUCTURE
+
+node "Cloud Server (AWS / Azure / GCP)" as Cloud {
+
+component "Backend API" as API
+
+component "Servicio de Autenticación" as Auth
+
+component "Trip Management Service" as Trip
+
+component "Chat Service" as Chat
+
+component "Servicio de Notificación" as Notify
+
+component "Analytics Service" as Analytics
+
+}
+
+' Servicios Database
+node "Database Server" as DBServer {
+
+database "MySQL Database" as MySQL
+
+}
+
+' Servicios Externos
+
+node "Firebase Cloud Messaging" as Firebase {
+
+component "Push Notification Service" as Push
+
+}
+
+node "Google Maps Platform" as Maps {
+
+component "Maps API" as MapsAPI
+
+}
+
+node "Email Verification Service" as Email {
+
+component "SMTP / Verification API" as MailService
+
+}
+
+' Conexiones
+
+MobileApp --> API : HTTPS Requests
+LandingPage --> API : REST API Calls
+
+API --> Auth : Authentication
+API --> Trip : Travel Management
+API --> Chat : Messaging
+API --> Notify : Notifications
+API --> Analytics : Metrics & History
+
+Auth --> MySQL : User Data
+Trip --> MySQL : Travel Data
+Chat --> MySQL : Chat Data
+Analytics --> MySQL : Reports & History
+
+Notify --> Push : Push Notifications
+
+Trip --> MapsAPI : Maps & Geolocation
+
+Auth --> MailService : Email Validation
+
+@enduml

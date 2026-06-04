@@ -1,0 +1,101 @@
+@startuml
+
+title Diagrama de Caso de Uso de Negocio - RutaFlex
+
+actor Pasajero
+actor Conductor
+actor Administrador
+
+rectangle "Negocio RutaFlex" {
+
+package "Gestión de Usuarios" {
+
+usecase "Registrarse en\nla plataforma" as UC1
+usecase "Autenticarse en\nla plataforma" as UC2
+usecase "Gestionar perfil" as UC3
+
+}
+
+package "Gestión de Transporte Compartido" {
+
+usecase "Buscar transporte\ncompartido" as UC4
+usecase "Publicar ruta\nde viaje" as UC5
+usecase "Coordinar punto\nde encuentro" as UC6
+usecase "Cancelar viaje\nprogramado" as UC7
+usecase "Consultar historial\nde viajes" as UC8
+
+}
+
+package "Comunicación y Seguimiento" {
+
+usecase "Comunicarse con\notros usuarios" as UC9
+usecase "Recibir notificaciones\ndel viaje" as UC10
+usecase "Compartir ubicación\nen tiempo real" as UC11
+
+}
+
+package "Seguridad y Reputación" {
+
+usecase "Calificar experiencia\ndel viaje" as UC12
+usecase "Validar identidad\nde usuarios" as UC13
+usecase "Supervisar comportamiento\nde usuarios" as UC14
+
+}
+
+package "Impacto y Beneficios" {
+
+usecase "Visualizar ahorro\neconómico" as UC15
+usecase "Visualizar reducción\nde CO2" as UC16
+
+}
+
+}
+
+' =========================
+' PASAJERO
+' =========================
+
+Pasajero --> UC1
+Pasajero --> UC2
+Pasajero --> UC3
+Pasajero --> UC4
+Pasajero --> UC6
+Pasajero --> UC8
+Pasajero --> UC9
+Pasajero --> UC10
+Pasajero --> UC12
+Pasajero --> UC15
+Pasajero --> UC16
+
+' =========================
+' CONDUCTOR
+' =========================
+
+Conductor --> UC1
+Conductor --> UC2
+Conductor --> UC3
+Conductor --> UC5
+Conductor --> UC6
+Conductor --> UC7
+Conductor --> UC8
+Conductor --> UC9
+Conductor --> UC10
+Conductor --> UC11
+Conductor --> UC12
+
+' =========================
+' ADMINISTRADOR
+' =========================
+
+Administrador --> UC13
+Administrador --> UC14
+
+' =========================
+' RELACIONES
+' =========================
+
+UC4 .> UC6 : <<include>>
+UC5 .> UC11 : <<include>>
+UC12 .> UC8 : <<extend>>
+
+@enduml

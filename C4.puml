@@ -1,0 +1,16 @@
+@startuml
+
+actor Conductor
+
+participant "Mobile App" as App
+participant "Backend API" as API
+database "Database" as DB
+
+Conductor -> App : Registrar nueva ruta
+App -> API : Enviar datos de ruta
+API -> DB : Guardar ruta
+DB --> API : Ruta registrada
+API --> App : Confirmación
+App --> Conductor : Mostrar éxito
+
+@enduml

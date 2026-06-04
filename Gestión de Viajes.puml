@@ -1,0 +1,64 @@
+@startuml
+
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+
+title Bounded Context - Gestión de Viajes
+
+class Viaje {
+
++idViaje : int
++origen : String
++destino : String
++fecha : Date
++horaSalida : DateTime
++cupos : int
++estado : String
+
+--
++crearViaje()
++cancelarViaje()
+
+}
+
+class Ruta {
+
++idRuta : int
++puntoInicio : String
++puntoFin : String
++distancia : double
+
+}
+
+class Reserva {
+
++idReserva : int
++fechaReserva : Date
++estado : String
+
+}
+
+class Conductor {
+
++licencia : String
++vehiculo : String
+
+--
++publicarRuta()
++editarRuta()
+
+}
+
+class Pasajero {
+
++buscarViaje()
++reservarViaje()
+
+}
+
+Conductor "1" --> "*" Viaje
+Viaje "1" --> "1" Ruta
+Pasajero "1" --> "*" Reserva
+Reserva "*" --> "1" Viaje
+
+@enduml

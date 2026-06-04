@@ -1,0 +1,16 @@
+@startuml
+
+actor Pasajero
+
+participant "Mobile App" as App
+participant "Backend API" as API
+database "Database" as DB
+
+Pasajero -> App : Buscar viaje
+App -> API : Solicitar viajes disponibles
+API -> DB : Consultar rutas
+DB --> API : Lista de viajes
+API --> App : Resultados encontrados
+App --> Pasajero : Mostrar viajes
+
+@enduml

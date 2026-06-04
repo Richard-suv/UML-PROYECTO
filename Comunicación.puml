@@ -1,0 +1,51 @@
+@startuml
+
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+
+title Bounded Context - Comunicación
+
+class Chat {
+
++idChat : int
++fechaCreacion : Date
+
+}
+
+class Mensaje {
+
++idMensaje : int
++contenido : String
++fechaEnvio : DateTime
+
+--
++enviarMensaje()
+
+}
+
+class Notificacion {
+
++idNotificacion : int
++mensaje : String
++tipo : String
+
+--
++enviarPush()
+
+}
+
+class UbicacionTiempoReal {
+
++latitud : double
++longitud : double
+
+--
++compartirUbicacion()
+
+}
+
+Chat "1" --> "*" Mensaje
+Mensaje --> Notificacion
+Notificacion --> UbicacionTiempoReal
+
+@enduml

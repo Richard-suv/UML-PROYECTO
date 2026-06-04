@@ -1,0 +1,32 @@
+@startuml ""
+skinparam SwimlaneTitleBackgroundColor #EEE
+skinparam ActivityBackgroundColor #FFF9C4
+skinparam ActivityBorderColor #7A1631
+skinparam Arrow {
+  Color #7A1631
+}
+
+|Persona|
+start
+:Solicita Producto;
+
+|Almacenero|
+:Consulta stock;
+
+if (Existe) then (Sí)
+  :Registra salida de Producto;
+  |Persona|
+  :Recibe Producto;
+  stop
+else (No)
+  |Almacenero|
+  :Solicita Producto al Proveedor;
+  |Proveedor|
+  :Recepciona solicitud;
+  :Envia Producto;
+  |Almacenero|
+  :Recepciona Producto;
+  :Actualiza stock;
+  stop
+endif
+@enduml
