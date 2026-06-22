@@ -1,0 +1,20 @@
+@startuml
+
+class Usuario
+class Perfil
+class Ruta
+class Viaje
+class Chat
+class Mensaje
+class Calificacion
+class HistorialViaje
+
+Usuario "1" -- "1" Perfil
+Usuario "1" -- "*" Ruta
+Ruta "1" -- "*" Viaje
+Viaje "1" -- "*" Chat
+Chat "1" -- "*" Mensaje
+Viaje "1" -- "*" Calificacion
+Usuario "1" -- "*" HistorialViaje
+
+@enduml

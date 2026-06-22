@@ -1,0 +1,14 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title RutaFlex - Diagrama de contexto
+
+Person(pasajero, "Pasajero", "Busca viajes compartidos")
+Person(conductor, "Conductor", "Publica rutas y transporta pasajeros")
+
+System(rutaflex, "RutaFlex", "Plataforma de carpooling universitario")
+
+Rel(pasajero, rutaflex, "Busca viajes, reserva plazas")
+Rel(conductor, rutaflex, "Publica rutas, gestiona viajes")
+
+@enduml

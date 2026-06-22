@@ -1,0 +1,39 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title RutaFlex - Component Diagram
+
+Container_Boundary(api, "Backend API") {
+
+    Component(auth,
+    "Gestión de Usuarios",
+    "Control de usuarios y perfiles")
+
+    Component(viajes,
+    "Gestión de Viajes",
+    "Publicación y búsqueda de rutas")
+
+    Component(chat,
+    "Gestión de Chat",
+    "Mensajería entre usuarios")
+
+    Component(calificacion,
+    "Gestión de Reputación",
+    "Calificaciones y comentarios")
+
+    Component(historial,
+    "Gestión de Historial",
+    "Registro de viajes realizados")
+
+    Component(impacto,
+    "Gestión de Impacto Ambiental",
+    "Ahorro económico y CO₂")
+}
+
+Rel(auth, viajes, "Valida usuarios")
+Rel(viajes, chat, "Crea chats")
+Rel(viajes, historial, "Registra viajes")
+Rel(historial, impacto, "Calcula métricas")
+Rel(historial, calificacion, "Genera evaluaciones")
+
+@enduml

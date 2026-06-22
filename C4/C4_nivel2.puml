@@ -1,0 +1,37 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title RutaFlex - Container Diagram
+
+Person(usuario, "Usuario", "Pasajero o Conductor")
+
+System_Boundary(system, "RutaFlex") {
+
+    Container(web, "Landing Page", "React", "Información del servicio")
+    Container(app, "Aplicacion Móvil", "Flutter", "Gestión de viajes compartidos")
+    Container(api, "Backend API", "Node.js", "Lógica de negocio")
+    Container(chat, "Servicio de Chat", "WebSocket", "Mensajería entre usuarios")
+    ContainerDb(db, "Base de Datos", "MySQL", "Persistencia de información")
+    Container(notification, "Servicio de Notificaciones", "Firebase", "Notificaciones push")
+}
+
+System_Ext(googlemaps, "Google Maps API", "Geolocalización")
+System_Ext(emailservice, "Servicio de Correos", "Validación institucional")
+
+Rel(usuario, web, "Consulta información")
+Rel(usuario, app, "Usa")
+
+Rel(web, app, "Redirecciona descarga")
+Rel(app, api, "HTTPS / JSON")
+Rel(api, db, "CRUD SQL")
+
+Rel(api, chat, "Gestiona mensajes")
+Rel(chat, app, "Mensajes en tiempo real")
+
+Rel(api, notification, "Envía eventos")
+Rel(notification, app, "Push notifications")
+
+Rel(api, googlemaps, "Solicita rutas y geolocalización")
+Rel(api, emailservice, "Verifica correos institucionales")
+
+@enduml
