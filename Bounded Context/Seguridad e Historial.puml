@@ -1,49 +1,41 @@
 @startuml
-
-skinparam backgroundColor white
 skinparam classAttributeIconSize 0
 
 title Bounded Context - Seguridad e Historial
 
 class Calificacion {
-
-+idCalificacion : int
-+puntaje : int
-+comentario : String
-
---
-+calificarUsuario()
-
+  +id: UUID
+  +puntaje: int
+  +comentario: String
+  +fecha: DateTime
 }
 
-class Historial {
-
-+idHistorial : int
-+fechaViaje : Date
-+ahorroGenerado : double
-+co2Reducido : double
-
+class HistorialViaje {
+  +id: UUID
+  +fechaRegistro: DateTime
+  +descripcion: String
 }
 
-class Reporte {
-
-+idReporte : int
-+descripcion : String
-+estado : String
-
---
-+generarReporte()
-
+class Ahorro {
+  +id: UUID
+  +monto: Decimal
+  +moneda: String
 }
 
-class Seguridad {
-
-+validarIdentidad()
-+bloquearUsuario()
-
+class CO2Ahorrado {
+  +id: UUID
+  +valor: Decimal
+  +unidad: String
 }
 
-Historial --> Calificacion
-Reporte --> Seguridad
+class ValidacionIdentidad {
+  +id: UUID
+  +estado: String
+  +fechaValidacion: DateTime
+}
 
+HistorialViaje "1" o-- "0..*" Calificacion
+HistorialViaje "1" o-- "0..*" Ahorro
+HistorialViaje "1" o-- "0..*" CO2Ahorrado
+ValidacionIdentidad --> HistorialViaje
 @enduml

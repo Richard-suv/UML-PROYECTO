@@ -1,58 +1,44 @@
 @startuml
-
-skinparam backgroundColor white
 skinparam classAttributeIconSize 0
 
-title Bounded Context - Gestión de Usuarios
+title Bounded Context - Gestión de Usuario
 
-class Usuario {
-
-+idUsuario : int
-+nombre : String
-+apellido : String
-+correo : String
-+telefono : String
-+password : String
-+rol : String
-
---
-+registrarse()
-+iniciarSesion()
-+cerrarSesion()
-+editarPerfil()
-
+abstract class Usuario {
+  +id: UUID
+  +nombres: String
+  +apellidos: String
+  +correoInstitucional: String
+  +telefono: String
+  +estado: String
 }
+
+class Estudiante
+class Pasajero
+class Conductor
 
 class Perfil {
-
-+idPerfil : int
-+foto : String
-+descripcion : String
-+reputacion : double
-
+  +foto: String
+  +bio: String
+  +universidad: String
 }
 
-class Autenticacion {
-
-+idAuth : int
-+correoInstitucional : String
-+codigoVerificacion : String
-
---
-+validarCorreo()
-+recuperarPassword()
-
+class CredencialInstitucional {
+  +dominio: String
+  +validada: boolean
+  +fechaValidacion: Date
 }
 
-class Administrador {
-
-+gestionarUsuarios()
-+suspenderUsuario()
-
+class Sesion {
+  +token: String
+  +fechaInicio: DateTime
+  +fechaFin: DateTime
 }
 
-Usuario "1" --> "1" Perfil
-Usuario "1" --> "1" Autenticacion
-Administrador --|> Usuario
+Usuario <|-- Estudiante
+Estudiante <|-- Pasajero
+Estudiante <|-- Conductor
 
+Usuario "1" o-- "1" Perfil
+Usuario "1" o-- "1" CredencialInstitucional
+Usuario "1" o-- "0..*" Sesion
 @enduml

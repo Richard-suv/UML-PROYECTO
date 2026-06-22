@@ -1,53 +1,16 @@
 @startuml
-
-title Flujo de Negocio - Buscar Viaje
-
-|Pasajero|
-
 start
-
-:Abrir aplicación;
-:Ingresar destino;
-
-|Sistema|
-
-:Buscar viajes disponibles;
-
-if (¿Existen viajes?) then (Sí)
-
-:Mostrar lista de viajes;
-
-|Pasajero|
-
-:Seleccionar viaje;
-:Enviar solicitud;
-
-|Conductor|
-
-:Recibir solicitud;
-:Aceptar solicitud;
-
-|Sistema|
-
-:Confirmar viaje;
-
-|Pasajero|
-
-:Recibir confirmación;
-:Iniciar viaje;
-
-stop
-
+:Ingresar a la aplicación;
+:Iniciar sesión con correo universitario;
+:Seleccionar "Buscar viajes";
+:Ingresar destino y hora;
+if (¿Existen viajes disponibles?) then (Sí)
+  :Mostrar listado de viajes;
+  :Seleccionar un viaje;
+  :Ver detalles del viaje;
+  :Elegir viajar o contactar al conductor;
 else (No)
-
-:Mostrar mensaje de error;
-
-|Pasajero|
-
-:Buscar otro destino;
-
-stop
-
+  :Mostrar mensaje\n"No se encontraron viajes disponibles";
 endif
-
+stop
 @enduml

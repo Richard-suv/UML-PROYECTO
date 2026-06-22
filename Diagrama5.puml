@@ -1,16 +1,33 @@
 @startuml
-
 actor Pasajero
+boundary "App RutaFlex" as App
+control "AuthController" as Auth
+control "ViajeController" as ViajeC
+entity "ViajeService" as ViajeS
+database "BD RutaFlex" as DB
 
-participant "Mobile App" as App
-participant "Backend API" as API
-database "Database" as DB
+Pasajero -> App : Ingresar correo y contraseña
+App -> Auth : autenticar(correo, contraseña)
+Auth -> DB : validarUsuario()
+DB --> Auth : usuario válido
+Auth --> App : sesión creada
 
-Pasajero -> App : Buscar viaje
-App -> API : Solicitar viajes disponibles
-API -> DB : Consultar rutas
-DB --> API : Lista de viajes
-API --> App : Resultados encontrados
-App --> Pasajero : Mostrar viajes
+Pasajero -> App : Buscar viajes
+App -> ViajeC : buscarViajes(destino, hora)
+ViajeC -> ViajeS : obtenerViajesFiltrados()
+ViajeS -> DB : consultarViajes()
+DB --> ViajeS : lista de viajes
+ViajeS --> ViajeC : resultados
+ViajeC --> App : mostrar listado
 
+Pasajero -> App : Ver detalle de viaje
+App -> ViajeC : obtenerDetalle(viajeId)
+ViajeC -> ViajeS : detalleViaje(viajeId)
+ViajeS -> DB : consultarDetalle()
+DB --> ViajeS : detalle
+ViajeS --> ViajeC : detalle
+ViajeC --> App : mostrar detalle
+
+Pasajero -> App : Abrir chat / calificar / ver historial
+App --> Pasajero : Interacción disponible
 @enduml

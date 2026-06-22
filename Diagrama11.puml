@@ -1,125 +1,131 @@
 @startuml
 
-skinparam backgroundColor white
-
-skinparam entity {
-BackgroundColor #EBF5FB
-BorderColor #1B4F72
-FontColor black
-}
-
 title Diagrama de Base de Datos - RutaFlex
 
-entity Usuarios {
-
-* id_usuario : INT <<PK>>
+entity usuario {
+  * id_usuario : UUID
   --
-  nombre : VARCHAR
-  apellido : VARCHAR
-  correo : VARCHAR
-  telefono : VARCHAR
-  password : VARCHAR
-  rol : VARCHAR
-  reputacion : DOUBLE
-
+  nombres : varchar
+  apellidos : varchar
+  correo_institucional : varchar
+  telefono : varchar
+  estado : varchar
 }
 
-entity Viajes {
-
-* id_viaje : INT <<PK>>
+entity perfil {
+  * id_perfil : UUID
   --
-  origen : VARCHAR
-  destino : VARCHAR
-  fecha : DATE
-  hora_salida : DATETIME
-  cupos : INT
-  estado : VARCHAR
-  costo : DOUBLE
-  id_conductor : INT <<FK>>
-
+  id_usuario : UUID <<FK>>
+  foto : varchar
+  bio : text
+  universidad : varchar
 }
 
-entity Rutas {
-
-* id_ruta : INT <<PK>>
+entity credencial_institucional {
+  * id_credencial : UUID
   --
-  punto_inicio : VARCHAR
-  punto_fin : VARCHAR
-  distancia : DOUBLE
-  tiempo_estimado : DOUBLE
-  id_viaje : INT <<FK>>
-
+  id_usuario : UUID <<FK>>
+  dominio : varchar
+  validada : boolean
+  fecha_validacion : datetime
 }
 
-entity Mensajes {
-
-* id_mensaje : INT <<PK>>
+entity ruta {
+  * id_ruta : UUID
   --
-  contenido : TEXT
-  fecha_envio : DATETIME
-  id_emisor : INT <<FK>>
-  id_receptor : INT <<FK>>
-
+  id_conductor : UUID <<FK>>
+  origen : varchar
+  destino : varchar
+  hora_salida : datetime
+  precio_compartido : decimal
+  cupos_disponibles : int
+  estado : varchar
 }
 
-entity Calificaciones {
-
-* id_calificacion : INT <<PK>>
+entity viaje {
+  * id_viaje : UUID
   --
-  puntaje : INT
-  comentario : TEXT
-  fecha : DATE
-  id_usuario : INT <<FK>>
-
+  id_ruta : UUID <<FK>>
+  fecha : date
+  hora : time
+  estado : varchar
 }
 
-entity Historial {
-
-* id_historial : INT <<PK>>
+entity detalle_viaje {
+  * id_detalle : UUID
   --
-  fecha_viaje : DATE
-  ahorro_generado : DOUBLE
-  co2_reducido : DOUBLE
-  id_usuario : INT <<FK>>
-  id_viaje : INT <<FK>>
-
+  id_viaje : UUID <<FK>>
+  punto_encuentro : varchar
+  descripcion : text
 }
 
-entity Notificaciones {
-
-* id_notificacion : INT <<PK>>
+entity chat {
+  * id_chat : UUID
   --
-  mensaje : TEXT
-  tipo : VARCHAR
-  fecha_envio : DATETIME
-  estado : VARCHAR
-  id_usuario : INT <<FK>>
-
+  id_viaje : UUID <<FK>>
+  estado : varchar
+  fecha_creacion : datetime
 }
 
-entity Reportes {
-
-* id_reporte : INT <<PK>>
+entity mensaje {
+  * id_mensaje : UUID
   --
-  descripcion : TEXT
-  fecha_reporte : DATE
-  estado : VARCHAR
-  id_usuario : INT <<FK>>
-
+  id_chat : UUID <<FK>>
+  id_usuario : UUID <<FK>>
+  contenido : text
+  fecha_envio : datetime
+  leido : boolean
 }
 
-' =========================
-' RELACIONES
-' =========================
+entity calificacion {
+  * id_calificacion : UUID
+  --
+  id_viaje : UUID <<FK>>
+  id_emisor : UUID <<FK>>
+  id_receptor : UUID <<FK>>
+  puntaje : int
+  comentario : text
+  fecha : datetime
+}
 
-Usuarios ||--o{ Viajes : publica
-Usuarios ||--o{ Mensajes : envia
-Usuarios ||--o{ Calificaciones : recibe
-Usuarios ||--o{ Historial : posee
-Usuarios ||--o{ Notificaciones : recibe
-Usuarios ||--o{ Reportes : genera
+entity historial_viaje {
+  * id_historial : UUID
+  --
+  id_usuario : UUID <<FK>>
+  id_viaje : UUID <<FK>>
+  fecha_registro : datetime
+  descripcion : text
+}
 
-Viajes ||--|| Rutas : contiene
-Viajes ||--o{ Historial : registra
+entity ahorro {
+  * id_ahorro : UUID
+  --
+  id_historial : UUID <<FK>>
+  monto : decimal
+  moneda : varchar
+}
 
+entity co2_ahorrado {
+  * id_co2 : UUID
+  --
+  id_historial : UUID <<FK>>
+  valor : decimal
+  unidad : varchar
+}
+
+usuario ||--|| perfil
+usuario ||--|| credencial_institucional
+usuario ||--o{ ruta : conduce
+ruta ||--o{ viaje
+viaje ||--|| detalle_viaje
+viaje ||--o{ chat
+chat ||--o{ mensaje
+usuario ||--o{ mensaje
+viaje ||--o{ calificacion
+usuario ||--o{ calificacion : emite
+usuario ||--o{ calificacion : recibe
+usuario ||--o{ historial_viaje
+viaje ||--o{ historial_viaje
+historial_viaje ||--o{ ahorro
+historial_viaje ||--o{ co2_ahorrado
 @enduml

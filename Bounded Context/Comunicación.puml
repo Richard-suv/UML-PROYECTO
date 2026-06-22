@@ -1,51 +1,39 @@
 @startuml
-
-skinparam backgroundColor white
 skinparam classAttributeIconSize 0
 
 title Bounded Context - Comunicación
 
 class Chat {
-
-+idChat : int
-+fechaCreacion : Date
-
+  +id: UUID
+  +estado: String
+  +fechaCreacion: DateTime
 }
 
 class Mensaje {
-
-+idMensaje : int
-+contenido : String
-+fechaEnvio : DateTime
-
---
-+enviarMensaje()
-
+  +id: UUID
+  +contenido: String
+  +fechaEnvio: DateTime
+  +leido: boolean
 }
 
 class Notificacion {
-
-+idNotificacion : int
-+mensaje : String
-+tipo : String
-
---
-+enviarPush()
-
+  +id: UUID
+  +tipo: String
+  +contenido: String
+  +fechaEnvio: DateTime
 }
 
-class UbicacionTiempoReal {
-
-+latitud : double
-+longitud : double
-
---
-+compartirUbicacion()
-
+class UbicacionCompartida {
+  +id: UUID
+  +latitud: Double
+  +longitud: Double
+  +fechaActualizacion: DateTime
 }
 
-Chat "1" --> "*" Mensaje
-Mensaje --> Notificacion
-Notificacion --> UbicacionTiempoReal
-
+Chat "1" o-- "0..*" Mensaje
+Chat "1" o-- "0..*" Notificacion
+Chat "1" o-- "0..*" UbicacionCompartida
+Mensaje --> Chat
+Notificacion --> Chat
+UbicacionCompartida --> Chat
 @enduml

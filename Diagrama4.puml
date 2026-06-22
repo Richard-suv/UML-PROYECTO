@@ -1,82 +1,29 @@
 @startuml
-
-
-skinparam actor {
-BackgroundColor #D6EAF8
-BorderColor #1B4F72
-FontColor black
-}
-
-skinparam usecase {
-BackgroundColor #EBF5FB
-BorderColor #1B4F72
-FontColor black
-}
+left to right direction
+skinparam packageStyle rectangle
 
 title Diagrama de Caso de Uso de Sistema - RutaFlex
 
-actor Pasajero
-actor Conductor
-actor Administrador
+actor "Pasajero" as Pasajero
+actor "Conductor" as Conductor
 
-rectangle "Sistema RutaFlex" {
-
-package "Módulo de Autenticación" {
-
-usecase "Registrarse con\ncorreo institucional" as UC1
-usecase "Iniciar sesión" as UC2
-usecase "Cerrar sesión" as UC3
-usecase "Recuperar contraseña" as UC4
-usecase "Validar credenciales" as UC5
-
+rectangle "RutaFlex App" {
+  usecase "Autenticarse" as UC1
+  usecase "Buscar viajes" as UC2
+  usecase "Ver detalles\ndel viaje" as UC3
+  usecase "Publicar ruta" as UC4
+  usecase "Editar ruta" as UC5
+  usecase "Chatear" as UC6
+  usecase "Enviar mensajes" as UC7
+  usecase "Calificar usuarios" as UC8
+  usecase "Ver historial" as UC9
+  usecase "Ver ahorro" as UC10
+  usecase "Editar perfil" as UC11
+  usecase "Cerrar sesión" as UC12
+  usecase "Compartir ubicación" as UC13
+  usecase "Validar identidad" as UC14
+  usecase "Recibir notificaciones" as UC15
 }
-
-package "Módulo de Gestión de Viajes" {
-
-usecase "Buscar viajes\n disponibles" as UC6
-usecase "Filtrar viajes" as UC7
-usecase "Ver detalles\n del viaje" as UC8
-usecase "Publicar ruta" as UC9
-usecase "Editar ruta publicada" as UC10
-usecase "Cancelar viaje" as UC11
-
-}
-
-package "Módulo de Comunicación" {
-
-usecase "Enviar mensajes" as UC12
-usecase "Recibir mensajes" as UC13
-usecase "Recibir notificaciones" as UC14
-usecase "Compartir ubicación\nen tiempo real" as UC15
-
-}
-
-package "Módulo de Seguridad y Reputación" {
-
-usecase "Validar identidad" as UC16
-usecase "Calificar usuarios" as UC17
-usecase "Gestionar reputación" as UC18
-
-}
-
-package "Módulo de Historial e Impacto" {
-
-usecase "Visualizar historial\nde viajes" as UC19
-usecase "Visualizar ahorro\neconómico" as UC20
-usecase "Visualizar reducción\nde CO2" as UC21
-
-}
-
-package "Administración del Sistema" {
-
-usecase "Gestionar usuarios" as UC22
-usecase "Supervisar reportes" as UC23
-
-}
-
-}
-
-' PASAJERO
 
 Pasajero --> UC1
 Pasajero --> UC2
@@ -84,19 +31,20 @@ Pasajero --> UC3
 Pasajero --> UC6
 Pasajero --> UC7
 Pasajero --> UC8
+Pasajero --> UC9
+Pasajero --> UC10
+Pasajero --> UC11
 Pasajero --> UC12
 Pasajero --> UC13
 Pasajero --> UC14
-Pasajero --> UC17
-Pasajero --> UC19
-Pasajero --> UC20
-Pasajero --> UC21
-
-' CONDUCTOR
+Pasajero --> UC15
 
 Conductor --> UC1
-Conductor --> UC2
-Conductor --> UC3
+Conductor --> UC4
+Conductor --> UC5
+Conductor --> UC6
+Conductor --> UC7
+Conductor --> UC8
 Conductor --> UC9
 Conductor --> UC10
 Conductor --> UC11
@@ -104,20 +52,4 @@ Conductor --> UC12
 Conductor --> UC13
 Conductor --> UC14
 Conductor --> UC15
-Conductor --> UC17
-
-' ADMINISTRADOR
-
-Administrador --> UC16
-Administrador --> UC18
-Administrador --> UC22
-Administrador --> UC23
-
-' RELACIONES
-
-UC2 .> UC5 : <<include>>
-UC6 .> UC7 : <<extend>>
-UC9 .> UC15 : <<include>>
-UC17 .> UC18 : <<include>>
-
 @enduml

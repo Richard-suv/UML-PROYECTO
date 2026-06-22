@@ -1,16 +1,32 @@
 @startuml
-
 actor Conductor
+boundary "App RutaFlex" as App
+control "RutaController" as RutaC
+entity "RutaService" as RutaS
+database "BD RutaFlex" as DB
 
-participant "Mobile App" as App
-participant "Backend API" as API
-database "Database" as DB
+Conductor -> App : Ingresar a la app
+App -> RutaC : iniciarSesion(correo, contraseña)
+RutaC -> DB : validarUsuario()
+DB --> RutaC : usuario válido
+RutaC --> App : acceso concedido
 
-Conductor -> App : Registrar nueva ruta
-App -> API : Enviar datos de ruta
-API -> DB : Guardar ruta
-DB --> API : Ruta registrada
-API --> App : Confirmación
-App --> Conductor : Mostrar éxito
+Conductor -> App : Publicar ruta
+App -> RutaC : registrarRuta(datosRuta)
+RutaC -> RutaS : crearRuta(datosRuta)
+RutaS -> DB : guardarRuta()
+DB --> RutaS : ruta registrada
+RutaS --> RutaC : confirmación
+RutaC --> App : mostrar éxito
 
+Conductor -> App : Editar ruta
+App -> RutaC : actualizarRuta(rutaId, cambios)
+RutaC -> RutaS : modificarRuta()
+RutaS -> DB : actualizarRuta()
+DB --> RutaS : ruta actualizada
+RutaS --> RutaC : confirmación
+RutaC --> App : mostrar actualización
+
+Conductor -> App : Ver rutas publicadas / chat / notificaciones
+App --> Conductor : Información disponible
 @enduml

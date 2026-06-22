@@ -1,99 +1,32 @@
 @startuml
-
 skinparam componentStyle rectangle
-skinparam backgroundColor white
-
-skinparam component {
-BackgroundColor #EBF5FB
-BorderColor #1B4F72
-FontColor black
-}
-
-skinparam database {
-BackgroundColor #FDEDEC
-BorderColor #922B21
-}
-
-skinparam node {
-BackgroundColor #E8F8F5
-BorderColor #117864
-}
 
 title Diagrama de Componentes - RutaFlex
 
-package "Cliente" {
+component "App Móvil RutaFlex" as Mobile
+component "Frontend Web RutaFlex" as Web
+component "API Gateway" as API
+component "Servicio de Usuarios" as Users
+component "Servicio de Viajes" as Trips
+component "Servicio de Comunicación" as Comm
+component "Servicio de Seguridad e Historial" as SecHist
+database "Base de Datos" as DB
+component "Servicio de Correo\nInstitucional" as Mail
+component "Servicio de Notificaciones" as Push
+component "Servicio de Mapas / Ubicación" as Maps
 
-[Landing Page] as Landing
-[Mobile App] as Mobile
-
-}
-
-package "Backend Services" {
-
-component "Servicio de Autenticación" as Auth
-component "Trip Management Service" as Trip
-component "Chat Service" as Chat
-component "Servicio de Notificacion" as Notify
-component "Servicio de Reputacición" as Reputation
-component "History & Analytics Service" as Analytics
-
-}
-
-package "Persistence Layer" {
-
-database "User Database" as UserDB
-database "Trip Database" as TripDB
-database "Chat Database" as ChatDB
-
-}
-
-package "External Services" {
-
-component "Firebase Cloud Messaging" as Firebase
-component "Google Maps API" as Maps
-component "Email Verification Service" as EmailService
-
-}
-
-' =========================
-' CLIENT CONNECTIONS
-' =========================
-
-Landing --> Auth : Registro/Login
-Landing --> Mobile : Descargar App
-
-Mobile --> Auth : Autenticación
-Mobile --> Trip : Gestión de viajes
-Mobile --> Chat : Mensajería
-Mobile --> Notify : Notificaciones
-Mobile --> Reputation : Calificaciones
-Mobile --> Analytics : Historial y ahorro
-
-' =========================
-' BACKEND CONNECTIONS
-' =========================
-
-Auth --> UserDB : CRUD usuarios
-Auth --> EmailService : Verificación correo
-
-Trip --> TripDB : CRUD viajes
-Trip --> Maps : Geolocalización
-
-Chat --> ChatDB : Mensajes
-
-Notify --> Firebase : Push notifications
-
-Reputation --> UserDB : Reputación usuarios
-
-Analytics --> TripDB : Historial viajes
-Analytics --> UserDB : Datos usuario
-
-' =========================
-' INTERNAL COMMUNICATION
-' =========================
-
-Trip --> Notify : Eventos de viaje
-Chat --> Notify : Nuevos mensajes
-Reputation --> Analytics : Métricas
-
+Mobile --> API
+Web --> API
+API --> Users
+API --> Trips
+API --> Comm
+API --> SecHist
+Users --> DB
+Trips --> DB
+Comm --> DB
+SecHist --> DB
+Users --> Mail
+Comm --> Push
+Trips --> Maps
+Comm --> Maps
 @enduml

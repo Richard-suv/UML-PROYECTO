@@ -1,64 +1,51 @@
 @startuml
-
-skinparam backgroundColor white
 skinparam classAttributeIconSize 0
 
 title Bounded Context - Gestión de Viajes
 
-class Viaje {
-
-+idViaje : int
-+origen : String
-+destino : String
-+fecha : Date
-+horaSalida : DateTime
-+cupos : int
-+estado : String
-
---
-+crearViaje()
-+cancelarViaje()
-
-}
-
 class Ruta {
-
-+idRuta : int
-+puntoInicio : String
-+puntoFin : String
-+distancia : double
-
+  +id: UUID
+  +origen: String
+  +destino: String
+  +horaSalida: DateTime
+  +precioCompartido: Decimal
+  +cuposDisponibles: int
+  +estado: String
 }
 
-class Reserva {
-
-+idReserva : int
-+fechaReserva : Date
-+estado : String
-
+class Viaje {
+  +id: UUID
+  +fecha: Date
+  +hora: Time
+  +estado: String
 }
 
-class Conductor {
-
-+licencia : String
-+vehiculo : String
-
---
-+publicarRuta()
-+editarRuta()
-
+class DetalleViaje {
+  +id: UUID
+  +puntoEncuentro: String
+  +descripcion: String
 }
 
-class Pasajero {
-
-+buscarViaje()
-+reservarViaje()
-
+class FiltroViaje {
+  +hora: String
+  +destino: String
 }
 
-Conductor "1" --> "*" Viaje
-Viaje "1" --> "1" Ruta
-Pasajero "1" --> "*" Reserva
-Reserva "*" --> "1" Viaje
+class ReservaViaje {
+  +id: UUID
+  +fechaReserva: DateTime
+  +estado: String
+}
 
+class Ubicacion {
+  +latitud: Double
+  +longitud: Double
+  +referencia: String
+}
+
+Ruta "1" o-- "0..*" Viaje
+Viaje "1" o-- "1" DetalleViaje
+Viaje "1" o-- "0..*" ReservaViaje
+Ruta "1" o-- "1" Ubicacion
+FiltroViaje ..> Ruta : filtra
 @enduml
