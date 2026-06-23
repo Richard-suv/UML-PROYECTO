@@ -1,41 +1,95 @@
-@startuml
-skinparam classAttributeIconSize 0
+@startuml ""
 
-title Bounded Context - Seguridad e Historial
+package SeguridadHistorial {
 
-class Calificacion {
-  +id: idCalificacion
-  +puntaje: int
-  +comentario: String
-  +fecha: DateTime
+    package AgregadoCalificacion {
+
+        class Calificacion <<AggregateRoot>> {
+            - CalificacionId: id
+            - UsuarioCalificadoId: usuarioCalificadoId
+            - Puntaje: puntaje
+        }
+
+        class CalificacionId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class UsuarioCalificadoId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class Puntaje <<ValueObject>> {
+            - Integer: valor
+        }
+    }
+
+    package AgregadoHistorialViajes {
+
+        class HistorialViajes <<AggregateRoot>> {
+            - HistorialId: id
+            - UsuarioId: usuarioId
+        }
+
+        class HistorialId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class RegistroViaje <<Entity>> {
+            - RegistroViajeId: id
+            - ViajeId: viajeId
+        }
+
+        class RegistroViajeId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class Ahorro <<Entity>> {
+            - AhorroId: id
+            - Decimal: monto
+        }
+
+        class AhorroId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class AhorroCO2 <<Entity>> {
+            - AhorroCO2Id: id
+            - Decimal: kilogramos
+        }
+
+        class AhorroCO2Id <<ValueObject>> {
+            - Long: valor
+        }
+    }
 }
 
-class HistorialViaje {
-  +id: idHistorial
-  +fechaRegistro: DateTime
-  +descripcion: String
+package Compartido {
+
+    class UsuarioId <<ValueObject>> {
+        - Long: valor
+    }
+
+    class ViajeId <<ValueObject>> {
+        - Long: valor
+    }
+
 }
 
-class Ahorro {
-  +id: idAhorro
-  +monto: Decimal
-  +moneda: String
-}
+Calificacion --> CalificacionId
+Calificacion --> UsuarioCalificadoId
+Calificacion --> Puntaje
 
-class CO2Ahorrado {
-  +id: idCo2
-  +valor: Decimal
-  +unidad: String
-}
+HistorialViajes --> HistorialId
+HistorialViajes --> UsuarioId
 
-class ValidacionIdentidad {
-  +id: idValidadcion
-  +estado: String
-  +fechaValidacion: DateTime
-}
+HistorialViajes "1" *--> "*" RegistroViaje
+HistorialViajes "1" *--> "*" Ahorro
+HistorialViajes "1" *--> "*" AhorroCO2
 
-HistorialViaje "1" o-- "0..*" Calificacion
-HistorialViaje "1" o-- "0..*" Ahorro
-HistorialViaje "1" o-- "0..*" CO2Ahorrado
-ValidacionIdentidad --> HistorialViaje
+RegistroViaje --> RegistroViajeId
+RegistroViaje --> ViajeId
+
+Ahorro --> AhorroId
+AhorroCO2 --> AhorroCO2Id
+
 @enduml

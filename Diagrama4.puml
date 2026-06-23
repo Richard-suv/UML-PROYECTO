@@ -1,48 +1,52 @@
 @startuml
-left to right direction
 skinparam packageStyle rectangle
 
 title Diagrama de Caso de Uso de Sistema - RutaFlex
 
-actor "Pasajero" as Pasajero
-actor "Conductor" as Conductor
+actor "Estudiante pasajero" as Pasajero
+actor "Estudiante conductor" as Conductor
 
 rectangle "RutaFlex App" {
-  usecase "Autenticarse" as UC1
-  usecase "Buscar viajes" as UC2
-  usecase "Ver detalles\ndel viaje" as UC3
-  usecase "Publicar ruta" as UC4
-  usecase "Editar ruta" as UC5
-  usecase "Chatear" as UC6
-  usecase "Enviar mensajes" as UC7
-  usecase "Calificar usuarios" as UC8
-  usecase "Ver historial" as UC9
-  usecase "Ver ahorro" as UC10
-  usecase "Editar perfil" as UC11
-  usecase "Cerrar sesión" as UC12
-  usecase "Compartir ubicación" as UC13
-  usecase "Validar identidad" as UC14
-  usecase "Recibir notificaciones" as UC15
+  usecase "Iniciar sesión" as UC1
+  usecase "Registrarse" as UC2
+  usecase "Cerrar sesión" as UC3
+  usecase "Editar perfil" as UC4
+  usecase "Buscar viajes" as UC5
+  usecase "Ver detalles del viaje" as UC6
+  usecase "Publicar ruta" as UC7
+  usecase "Editar ruta" as UC8
+  usecase "Cancelar viaje" as UC9
+  usecase "Chatear" as UC10
+  usecase "Enviar mensajes" as UC11
+  usecase "Ver reputación" as UC12
+  usecase "Calificar usuarios" as UC13
+  usecase "Ver historial" as UC14
+  usecase "Visualizar ahorro" as UC15
+  usecase "Compartir ubicación" as UC16
+  usecase "Validar identidad" as UC17
+  usecase "Ver CO2 ahorrado" as UC18
 }
 
 Pasajero --> UC1
 Pasajero --> UC2
 Pasajero --> UC3
+Pasajero --> UC4
+Pasajero --> UC5
 Pasajero --> UC6
-Pasajero --> UC7
-Pasajero --> UC8
-Pasajero --> UC9
 Pasajero --> UC10
 Pasajero --> UC11
 Pasajero --> UC12
 Pasajero --> UC13
 Pasajero --> UC14
 Pasajero --> UC15
+Pasajero --> UC16
+Pasajero --> UC17
+Pasajero --> UC18
 
 Conductor --> UC1
+Conductor --> UC2
+Conductor --> UC3
 Conductor --> UC4
-Conductor --> UC5
-Conductor --> UC6
 Conductor --> UC7
 Conductor --> UC8
 Conductor --> UC9
@@ -52,4 +56,7 @@ Conductor --> UC12
 Conductor --> UC13
 Conductor --> UC14
 Conductor --> UC15
+Conductor --> UC16
+Conductor --> UC17
+Conductor --> UC18
 @enduml

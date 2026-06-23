@@ -1,16 +1,17 @@
 @startuml
 start
 :Ingresar a la aplicación;
-:Iniciar sesión con correo universitario;
-:Seleccionar "Buscar viajes";
+:Autenticarse con correo universitario;
+:Ir a "Buscar viaje";
 :Ingresar destino y hora;
+
 if (¿Existen viajes disponibles?) then (Sí)
   :Mostrar listado de viajes;
   :Seleccionar un viaje;
   :Ver detalles del viaje;
-  :Elegir viajar o contactar al conductor;
 else (No)
-  :Mostrar mensaje\n"No se encontraron viajes disponibles";
+  :Mostrar mensaje de no disponibilidad;
 endif
+
 stop
 @enduml

@@ -1,44 +1,63 @@
-@startuml
-skinparam classAttributeIconSize 0
+@startuml ""
 
-title Bounded Context - Gestión de Usuario
+package GestionUsuarios {
 
-abstract class Usuario {
-  +id: idUsuario
-  +nombres: String
-  +apellidos: String
-  +correoInstitucional: String
-  +telefono: String
-  +estado: String
+    package AgregadoUsuario {
+
+        class Usuario <<AggregateRoot>> {
+            - UsuarioId: id
+            - NombreCompleto: nombre
+            - CorreoInstitucional: correo
+            - NumeroTelefono: telefono
+        }
+
+        class UsuarioId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class NombreCompleto <<ValueObject>> {
+            - String: nombres
+            - String: apellidos
+        }
+
+        class CorreoInstitucional <<ValueObject>> {
+            - String: valor
+        }
+
+        class NumeroTelefono <<ValueObject>> {
+            - String: valor
+        }
+
+        class Perfil <<Entity>> {
+            - PerfilId: id
+            - String: biografia
+            - String: fotoPerfil
+        }
+
+        class PerfilId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class CredencialInstitucional <<Entity>> {
+            - CredencialId: id
+            - Boolean: validada
+        }
+
+        class CredencialId <<ValueObject>> {
+            - Long: valor
+        }
+    }
 }
 
-class Estudiante
-class Pasajero
-class Conductor
+Usuario --> UsuarioId
+Usuario --> NombreCompleto
+Usuario --> CorreoInstitucional
+Usuario --> NumeroTelefono
 
-class Perfil {
-  +foto: String
-  +bio: String
-  +universidad: String
-}
+Usuario "1" *--> "1" Perfil
+Usuario "1" *--> "1" CredencialInstitucional
 
-class CredencialInstitucional {
-  +dominio: String
-  +validada: boolean
-  +fechaValidacion: Date
-}
+Perfil --> PerfilId
+CredencialInstitucional --> CredencialId
 
-class Sesion {
-  +token: String
-  +fechaInicio: DateTime
-  +fechaFin: DateTime
-}
-
-Usuario <|-- Estudiante
-Estudiante <|-- Pasajero
-Estudiante <|-- Conductor
-
-Usuario "1" o-- "1" Perfil
-Usuario "1" o-- "1" CredencialInstitucional
-Usuario "1" o-- "0..*" Sesion
 @enduml

@@ -1,21 +1,18 @@
-@startuml
 
+@startuml
 title Diagrama de Caso de Uso de Negocio - RutaFlex
 
-left to right direction
 skinparam packageStyle rectangle
 
-actor "Pasajero" as Pasajero
-actor "Conductor" as Conductor
+actor "Estudiante pasajero" as Pasajero
+actor "Estudiante conductor" as Conductor
 
-rectangle "Negocio RutaFlex:\nBuscar Viaje" {
+rectangle "Negocio: Buscar Viaje" {
   usecase "Buscar viajes\npor destino" as UC1
-  usecase "Filtrar viajes\npor hora/destino" as UC2
+  usecase "Filtrar por hora" as UC2
   usecase "Ver detalles\ndel viaje" as UC3
-  usecase "Seleccionar viaje" as UC4
+  usecase "Consultar reputación" as UC4
   usecase "Contactar conductor" as UC5
-  usecase "Compartir ubicación\nen tiempo real" as UC6
-  usecase "Ver reputación\nantes de confirmar" as UC7
 }
 
 Pasajero --> UC1
@@ -23,9 +20,7 @@ Pasajero --> UC2
 Pasajero --> UC3
 Pasajero --> UC4
 Pasajero --> UC5
-Pasajero --> UC6
-Pasajero --> UC7
 
-Conductor --> UC6
-Conductor --> UC7
+Conductor --> UC4
+Conductor --> UC5
 @enduml

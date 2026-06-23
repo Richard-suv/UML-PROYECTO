@@ -1,32 +1,83 @@
-@startuml
-skinparam componentStyle rectangle
+@startuml ""
+skinparam componentStyle uml2
+skinparam linetype ortho
+left to right direction
 
-title Diagrama de Componentes - RutaFlex
+interface "Contrato" as Contrato
 
-component "App Móvil RutaFlex" as Mobile
-component "Frontend Web RutaFlex" as Web
-component "API Gateway" as API
-component "Servicio de Usuarios" as Users
-component "Servicio de Viajes" as Trips
-component "Servicio de Comunicación" as Comm
-component "Servicio de Seguridad e Historial" as SecHist
-database "Base de Datos" as DB
-component "Servicio de Correo\nInstitucional" as Mail
-component "Servicio de Notificaciones" as Push
-component "Servicio de Mapas / Ubicación" as Maps
+component "API RutaFlex" as API {
 
-Mobile --> API
-Web --> API
-API --> Users
-API --> Trips
-API --> Comm
-API --> SecHist
-Users --> DB
-Trips --> DB
-Comm --> DB
-SecHist --> DB
-Users --> Mail
-Comm --> Push
-Trips --> Maps
-Comm --> Maps
+  component "Contexto Delimitado de Gestión de Usuarios" as BC_Usuarios {
+
+    component "Capa de Interfaz" as U_Interfaz
+    component "Capa de Aplicación" as U_Aplicacion
+    component "Capa de Dominio" as U_Dominio
+    component "Capa de Infraestructura" as U_Infraestructura
+
+  }
+
+  component "Contexto Delimitado de Gestión de Viajes" as BC_Viajes {
+
+    component "Capa de Interfaz" as T_Interfaz
+    component "Capa de Aplicación" as T_Aplicacion
+    component "Capa de Dominio" as T_Dominio
+    component "Capa de Infraestructura" as T_Infraestructura
+
+  }
+
+  component "Contexto Delimitado de Comunicación" as BC_Comunicacion {
+
+    component "Capa de Interfaz" as C_Interfaz
+    component "Capa de Aplicación" as C_Aplicacion
+    component "Capa de Dominio" as C_Dominio
+    component "Capa de Infraestructura" as C_Infraestructura
+
+  }
+
+  component "Contexto Delimitado de Seguridad e Historial" as BC_SeguridadHistorial {
+
+    component "Capa de Interfaz" as SH_Interfaz
+    component "Capa de Aplicación" as SH_Aplicacion
+    component "Capa de Dominio" as SH_Dominio
+    component "Capa de Infraestructura" as SH_Infraestructura
+
+  }
+}
+
+database "Base de Datos Relacional" as BaseDatosRelacional <<external>>
+
+component "Servicio de Correo Institucional" as ServicioCorreo <<external>>
+
+component "Servicio de Notificaciones Push" as ServicioNotificaciones <<external>>
+
+component "Servicio de Mapas y Geolocalización" as ServicioMapas <<external>>
+
+API --> Contrato
+
+U_Interfaz ..> U_Aplicacion
+U_Aplicacion ..> U_Dominio
+U_Aplicacion ..> U_Infraestructura
+
+T_Interfaz ..> T_Aplicacion
+T_Aplicacion ..> T_Dominio
+T_Aplicacion ..> T_Infraestructura
+
+C_Interfaz ..> C_Aplicacion
+C_Aplicacion ..> C_Dominio
+C_Aplicacion ..> C_Infraestructura
+
+SH_Interfaz ..> SH_Aplicacion
+SH_Aplicacion ..> SH_Dominio
+SH_Aplicacion ..> SH_Infraestructura
+
+U_Infraestructura ..> BaseDatosRelacional
+T_Infraestructura ..> BaseDatosRelacional
+C_Infraestructura ..> BaseDatosRelacional
+SH_Infraestructura ..> BaseDatosRelacional
+
+U_Infraestructura ..> ServicioCorreo
+C_Infraestructura ..> ServicioNotificaciones
+T_Infraestructura ..> ServicioMapas
+C_Infraestructura ..> ServicioMapas
+
 @enduml

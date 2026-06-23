@@ -1,87 +1,87 @@
-@startuml
+@startuml "Deployment Diagram - RutaFlex"
 
+skinparam linetype ortho
 
-title Diagrama de Despliegue - RutaFlex
+node "Aplicación Móvil\n(Android / iOS)" as MobileApp
 
-' CLIENT DEVICES
+node "Navegador Web" as Browser
 
-node "Smartphone Usuario" as Smartphone {
+node "API Gateway" as ApiGateway
 
-component "RutaFlex Mobile App" as MobileApp
+node "AWS ECS - Gestión de Usuarios" as UsersContainer {
 
+    artifact "UsersMicroservice.jar" {
+
+        component "Capa de Interfaz" as UsersInterface
+        component "Capa de Aplicación" as UsersApplication
+        component "Capa de Dominio" as UsersDomain
+        component "Capa de Infraestructura" as UsersInfrastructure
+
+    }
 }
 
-node "Laptop / Navegador Web" as Browser {
+node "AWS ECS - Gestión de Viajes" as TripsContainer {
 
-component "Landing Page" as LandingPage
+    artifact "TripsMicroservice.jar" {
 
+        component "Capa de Interfaz" as TripsInterface
+        component "Capa de Aplicación" as TripsApplication
+        component "Capa de Dominio" as TripsDomain
+        component "Capa de Infraestructura" as TripsInfrastructure
+
+    }
 }
 
-' CLOUD INFRASTRUCTURE
+node "AWS ECS - Comunicación" as CommunicationContainer {
 
-node "Cloud Server (AWS / Azure / GCP)" as Cloud {
+    artifact "CommunicationMicroservice.jar" {
 
-component "Backend API" as API
+        component "Capa de Interfaz" as CommInterface
+        component "Capa de Aplicación" as CommApplication
+        component "Capa de Dominio" as CommDomain
+        component "Capa de Infraestructura" as CommInfrastructure
 
-component "Servicio de Autenticación" as Auth
-
-component "Trip Management Service" as Trip
-
-component "Chat Service" as Chat
-
-component "Servicio de Notificación" as Notify
-
-component "Analytics Service" as Analytics
-
+    }
 }
 
-' Servicios Database
-node "Database Server" as DBServer {
+node "AWS ECS - Seguridad e Historial" as TrustHistoryContainer {
 
-database "MySQL Database" as MySQL
+    artifact "TrustHistoryMicroservice.jar" {
 
+        component "Capa de Interfaz" as TrustInterface
+        component "Capa de Aplicación" as TrustApplication
+        component "Capa de Dominio" as TrustDomain
+        component "Capa de Infraestructura" as TrustInfrastructure
+
+    }
 }
 
-' Servicios Externos
+database "Base de Datos\nRutaFlex" as RutaFlexDB
 
-node "Firebase Cloud Messaging" as Firebase {
+cloud "Servicio de Correo\nInstitucional" as EmailService
 
-component "Push Notification Service" as Push
+cloud "Servicio de\nNotificaciones Push" as PushService
 
-}
+cloud "Servicio de Mapas\ny Geolocalización" as MapsService
 
-node "Google Maps Platform" as Maps {
+MobileApp --> ApiGateway : HTTPS
+Browser --> ApiGateway : HTTPS
 
-component "Maps API" as MapsAPI
+ApiGateway --> UsersContainer : HTTPS
+ApiGateway --> TripsContainer : HTTPS
+ApiGateway --> CommunicationContainer : HTTPS
+ApiGateway --> TrustHistoryContainer : HTTPS
 
-}
+UsersContainer --> RutaFlexDB : TCP/IP
+TripsContainer --> RutaFlexDB : TCP/IP
+CommunicationContainer --> RutaFlexDB : TCP/IP
+TrustHistoryContainer --> RutaFlexDB : TCP/IP
 
-node "Email Verification Service" as Email {
+UsersContainer --> EmailService : HTTPS
 
-component "SMTP / Verification API" as MailService
+CommunicationContainer --> PushService : HTTPS
 
-}
-
-' Conexiones
-
-MobileApp --> API : HTTPS Requests
-LandingPage --> API : REST API Calls
-
-API --> Auth : Authentication
-API --> Trip : Travel Management
-API --> Chat : Messaging
-API --> Notify : Notifications
-API --> Analytics : Metrics & History
-
-Auth --> MySQL : User Data
-Trip --> MySQL : Travel Data
-Chat --> MySQL : Chat Data
-Analytics --> MySQL : Reports & History
-
-Notify --> Push : Push Notifications
-
-Trip --> MapsAPI : Maps & Geolocation
-
-Auth --> MailService : Email Validation
+TripsContainer --> MapsService : HTTPS
+CommunicationContainer --> MapsService : HTTPS
 
 @enduml

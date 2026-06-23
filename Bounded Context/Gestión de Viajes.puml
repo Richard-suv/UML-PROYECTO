@@ -1,51 +1,59 @@
-@startuml
-skinparam classAttributeIconSize 0
+@startuml ""
 
-title Bounded Context - Gestión de Viajes
+package GestionViajes {
 
-class Ruta {
-  +id: UUID
-  +origen: String
-  +destino: String
-  +horaSalida: DateTime
-  +precioCompartido: Decimal
-  +cuposDisponibles: int
-  +estado: String
+    package AgregadoViaje {
+
+        class Viaje <<AggregateRoot>> {
+            - ViajeId: id
+            - ConductorId: conductorId
+            - Ruta: ruta
+        }
+
+        class ViajeId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class ConductorId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class Ruta <<Entity>> {
+            - RutaId: id
+            - Ubicacion: origen
+            - Ubicacion: destino
+            - DateTime: horaSalida
+        }
+
+        class RutaId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class Ubicacion <<ValueObject>> {
+            - String: direccion
+        }
+
+        class DisponibilidadAsientos <<Entity>> {
+            - Integer: asientosDisponibles
+        }
+    }
 }
 
-class Viaje {
-  +id: UUID
-  +fecha: Date
-  +hora: Time
-  +estado: String
+package Compartido {
+
+    class UsuarioId <<ValueObject>> {
+        - Long: valor
+    }
+
 }
 
-class DetalleViaje {
-  +id: UUID
-  +puntoEncuentro: String
-  +descripcion: String
-}
+Viaje --> ViajeId
+Viaje --> ConductorId
 
-class FiltroViaje {
-  +hora: String
-  +destino: String
-}
+Viaje "1" *--> "1" Ruta
+Viaje "1" *--> "1" DisponibilidadAsientos
 
-class ReservaViaje {
-  +id: UUID
-  +fechaReserva: DateTime
-  +estado: String
-}
+Ruta --> RutaId
+Ruta --> Ubicacion
 
-class Ubicacion {
-  +latitud: Double
-  +longitud: Double
-  +referencia: String
-}
-
-Ruta "1" o-- "0..*" Viaje
-Viaje "1" o-- "1" DetalleViaje
-Viaje "1" o-- "0..*" ReservaViaje
-Ruta "1" o-- "1" Ubicacion
-FiltroViaje ..> Ruta : filtra
 @enduml

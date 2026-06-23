@@ -1,39 +1,65 @@
-@startuml
-skinparam classAttributeIconSize 0
+@startuml ""
 
-title Bounded Context - Comunicación
+package Comunicacion {
 
-class Chat {
-  +id: idChat
-  +estado: String
-  +fechaCreacion: DateTime
+    package AgregadoChat {
+
+        class Chat <<AggregateRoot>> {
+            - ChatId: id
+            - ViajeId: viajeId
+        }
+
+        class ChatId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class Mensaje <<Entity>> {
+            - MensajeId: id
+            - UsuarioId: remitenteId
+            - ContenidoMensaje: contenido
+        }
+
+        class MensajeId <<ValueObject>> {
+            - Long: valor
+        }
+
+        class ContenidoMensaje <<ValueObject>> {
+            - String: valor
+        }
+
+        class Notificacion <<Entity>> {
+            - NotificacionId: id
+            - String: tipo
+        }
+
+        class NotificacionId <<ValueObject>> {
+            - Long: valor
+        }
+    }
 }
 
-class Mensaje {
-  +id: idMensaje
-  +contenido: String
-  +fechaEnvio: DateTime
-  +leido: boolean
+package Compartido {
+
+    class UsuarioId <<ValueObject>> {
+        - Long: valor
+    }
+
+    class ViajeId <<ValueObject>> {
+        - Long: valor
+    }
+
 }
 
-class Notificacion {
-  +id: idNotificacion
-  +tipo: String
-  +contenido: String
-  +fechaEnvio: DateTime
-}
+Chat --> ChatId
+Chat --> ViajeId
 
-class UbicacionCompartida {
-  +id: idUbicacion
-  +latitud: Double
-  +longitud: Double
-  +fechaActualizacion: DateTime
-}
+Chat "1" *--> "1..*" Mensaje
+Chat "1" *--> "*" Notificacion
 
-Chat "1" o-- "0..*" Mensaje
-Chat "1" o-- "0..*" Notificacion
-Chat "1" o-- "0..*" UbicacionCompartida
-Mensaje --> Chat
-Notificacion --> Chat
-UbicacionCompartida --> Chat
+Mensaje --> MensajeId
+Mensaje --> ContenidoMensaje
+Mensaje --> UsuarioId
+
+Notificacion --> NotificacionId
+
 @enduml

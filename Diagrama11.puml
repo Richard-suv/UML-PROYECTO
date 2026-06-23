@@ -1,131 +1,109 @@
 @startuml
 
-title Diagrama de Base de Datos - RutaFlex
-
-entity usuario {
-  * id_usuario : INT
+entity "users" as users {
+  * id : INT
   --
-  nombres : varchar
-  apellidos : varchar
-  correo_institucional : varchar
-  telefono : varchar
-  estado : varchar
+  first_name : varchar
+  last_name : varchar
+  institutional_email : varchar
+  phone : varchar
+  status : varchar
 }
 
-entity perfil {
-  * id_perfil : INT
+entity "profiles" as profiles {
+  * id : INT
   --
-  id_usuario : INT <<FK>>
-  foto : varchar
+  user_id : INT <<FK>>
+  photo_url : varchar
   bio : text
-  universidad : varchar
+  university_name : varchar
 }
 
-entity credencial_institucional {
-  * id_credencial : INT
+entity "trips" as trips {
+  * id : INT
   --
-  id_usuario : INT <<FK>>
-  dominio : varchar
-  validada : boolean
-  fecha_validacion : datetime
+  driver_user_id : INT <<FK>>
+  origin : varchar
+  destination : varchar
+  departure_time : datetime
+  shared_cost : decimal
+  available_seats : int
+  status : varchar
 }
 
-entity ruta {
-  * id_ruta : INT
+entity "trip_details" as trip_details {
+  * id : INT
   --
-  id_conductor : INT <<FK>>
-  origen : varchar
-  destino : varchar
-  hora_salida : datetime
-  precio_compartido : decimal
-  cupos_disponibles : int
-  estado : varchar
+  trip_id : INT <<FK>>
+  meeting_point : varchar
+  description : text
 }
 
-entity viaje {
-  * id_viaje : INT
+entity "chats" as chats {
+  * id : INT
   --
-  id_ruta : INT <<FK>>
-  fecha : date
-  hora : time
-  estado : varchar
+  trip_id : INT <<FK>>
+  status : varchar
+  created_at : datetime
 }
 
-entity detalle_viaje {
-  * id_detalle : INT
+entity "messages" as messages {
+  * id : INT
   --
-  id_viaje : INT <<FK>>
-  punto_encuentro : varchar
-  descripcion : text
+  chat_id : INT <<FK>>
+  sender_user_id : INT <<FK>>
+  content : text
+  sent_at : datetime
+  read_flag : boolean
 }
 
-entity chat {
-  * id_chat : INT
+entity "ratings" as ratings {
+  * id : INT
   --
-  id_viaje : INT <<FK>>
-  estado : varchar
-  fecha_creacion : datetime
+  trip_id : INT <<FK>>
+  sender_user_id : INT <<FK>>
+  receiver_user_id : INT <<FK>>
+  score : int
+  comment : text
+  created_at : datetime
 }
 
-entity mensaje {
-  * id_mensaje : INT
+entity "travel_history" as travel_history {
+  * id : INT
   --
-  id_chat : INT <<FK>>
-  id_usuario : INT <<FK>>
-  contenido : text
-  fecha_envio : datetime
-  leido : boolean
+  user_id : INT <<FK>>
+  trip_id : INT <<FK>>
+  registered_at : datetime
 }
 
-entity calificacion {
-  * id_calificacion : INT
+entity "savings" as savings {
+  * id : INT
   --
-  id_viaje : INT <<FK>>
-  id_emisor : INT <<FK>>
-  id_receptor : INT <<FK>>
-  puntaje : int
-  comentario : text
-  fecha : datetime
+  history_id : INT <<FK>>
+  amount : decimal
+  currency : varchar
 }
 
-entity historial_viaje {
-  * id_historial : INT
+entity "co2_savings" as co2_savings {
+  * id : INT
   --
-  id_usuario : INT <<FK>>
-  id_viaje : INT <<FK>>
-  fecha_registro : datetime
-  descripcion : text
+  history_id : INT <<FK>>
+  value : decimal
+  unit : varchar
 }
 
-entity ahorro {
-  * id_ahorro : INT
-  --
-  id_historial : INT <<FK>>
-  monto : decimal
-  moneda : varchar
-}
+users ||--|| profiles
+users ||--o{ trips : drives
+trips ||--|| trip_details
+trips ||--o{ chats
+chats ||--o{ messages
+users ||--o{ messages
+trips ||--o{ ratings
+users ||--o{ ratings : sends
+users ||--o{ ratings : receives
+users ||--o{ travel_history
+trips ||--o{ travel_history
+travel_history ||--o{ savings
+travel_history ||--o{ co2_savings
 
-entity co2_ahorrado {
-  * id_co2 : INT
-  --
-  id_historial : INT <<FK>>
-  valor : decimal
-  unidad : varchar
-}
-
-usuario ||--|| perfil
-usuario ||--|| credencial_institucional
-usuario ||--o{ ruta : conduce
-ruta ||--o{ viaje
-viaje ||--|| detalle_viaje
-viaje ||--o{ chat
-chat ||--o{ mensaje
-usuario ||--o{ mensaje
-viaje ||--o{ calificacion
-usuario ||--o{ calificacion : emite
-usuario ||--o{ calificacion : recibe
-usuario ||--o{ historial_viaje
-viaje ||--o{ historial_viaje
-historial_viaje ||--o{ ahorro
-historial_viaje ||--o{ co2_ahorrado
 @enduml

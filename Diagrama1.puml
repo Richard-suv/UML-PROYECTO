@@ -1,81 +1,47 @@
-@startuml
+@startuml "Business Case: RutaFlex"
 left to right direction
-skinparam packageStyle rectangle
 
-actor "Pasajero" as Pasajero
-actor "Conductor" as Conductor
+actor "Estudiante conductor" <<Business Worker>> as Driver
+actor "Estudiante pasajero" <<Business Worker>> as Passenger
 
-title Diagrama de Caso de Uso de Negocio - RutaFlex
+usecase "Gestionar\nviajes compartidos" as BUC1
+usecase "Publicar\nruta" as BUC2
+usecase "Buscar\nviaje" as BUC3
+usecase "Coordinar\ntrayecto" as BUC4
+usecase "Valorar\nexperiencia" as BUC5
+usecase "Consultar\nhistorial y ahorro" as BUC7
 
-rectangle "Servicio de Carpooling\nRutaFlex" {
-  usecase "Registrarse con correo\ninstitucional" as UC1
-  usecase "Iniciar sesión" as UC2
-  usecase "Buscar viajes\ndisponibles" as UC3
-  usecase "Ver detalles del viaje" as UC4
-  usecase "Publicar ruta básica" as UC5
-  usecase "Ver rutas publicadas" as UC6
-  usecase "Editar ruta publicada" as UC7
-  usecase "Chat básico entre\nusuarios" as UC8
-  usecase "Enviar mensajes en chat" as UC9
-  usecase "Ver reputación de usuarios" as UC10
-  usecase "Sistema de calificaciones" as UC11
-  usecase "Ver historial simple" as UC12
-  usecase "Visualizar ahorro básico" as UC13
-  usecase "Cerrar sesión" as UC14
-  usecase "Editar perfil" as UC15
-  usecase "Filtrar viajes\n(hora, destino)" as UC16
-  usecase "Cancelar viaje" as UC17
-  usecase "Notificaciones de viaje" as UC18
-  usecase "Notificaciones de mensajes" as UC19
-  usecase "Compartir ubicación\nen tiempo real" as UC20
-  usecase "Validar identidad\nde usuario" as UC21
-  usecase "Ver CO2 ahorrado" as UC22
-  usecase "Recomendaciones\nde viajes" as UC23
-  usecase "Historial detallado" as UC24
+Driver --> BUC1
+Passenger --> BUC1
+
+Driver --> BUC2
+Passenger --> BUC3
+Driver --> BUC4
+Passenger --> BUC4
+
+Driver --> BUC5
+Passenger --> BUC5
+
+
+Passenger --> BUC7
+Driver --> BUC7
+
+BUC2 --> BUC1 : <<include>>
+BUC3 --> BUC1 : <<include>>
+BUC4 --> BUC1 : <<include>>
+BUC5 --> BUC1 : <<include>>
+BUC7 --> BUC1 : <<include>>
+
+skinparam usecase {
+  BackgroundColor #C7F4FF
+  BorderColor #7A1631
+}
+skinparam actor {
+  BackgroundColor #C7F4FF
+  BorderColor #7A1631
+}
+skinparam Arrow {
+  Color #7A1631
 }
 
-Pasajero --> UC1
-Pasajero --> UC2
-Pasajero --> UC3
-Pasajero --> UC4
-Pasajero --> UC8
-Pasajero --> UC9
-Pasajero --> UC10
-Pasajero --> UC11
-Pasajero --> UC12
-Pasajero --> UC13
-Pasajero --> UC14
-Pasajero --> UC15
-Pasajero --> UC16
-Pasajero --> UC17
-Pasajero --> UC18
-Pasajero --> UC19
-Pasajero --> UC20
-Pasajero --> UC21
-Pasajero --> UC22
-Pasajero --> UC23
-Pasajero --> UC24
-
-Conductor --> UC1
-Conductor --> UC2
-Conductor --> UC5
-Conductor --> UC6
-Conductor --> UC7
-Conductor --> UC8
-Conductor --> UC9
-Conductor --> UC10
-Conductor --> UC11
-Conductor --> UC12
-Conductor --> UC13
-Conductor --> UC14
-Conductor --> UC15
-Conductor --> UC16
-Conductor --> UC17
-Conductor --> UC18
-Conductor --> UC19
-Conductor --> UC20
-Conductor --> UC21
-Conductor --> UC22
-Conductor --> UC23
-Conductor --> UC24
 @enduml
