@@ -1,95 +1,87 @@
-@startuml ""
+@startuml
+skinparam handwritten false
+skinparam monochrome false
+skinparam packageStyle rect
+skinparam shadowing false
 
-package SeguridadHistorial {
+title Bounded Context: Seguridad e Historial
 
-    package AgregadoCalificacion {
-
-        class Calificacion <<AggregateRoot>> {
-            - CalificacionId: id
-            - UsuarioCalificadoId: usuarioCalificadoId
-            - Puntaje: puntaje
-        }
-
-        class CalificacionId <<ValueObject>> {
-            - Long: valor
-        }
-
-        class UsuarioCalificadoId <<ValueObject>> {
-            - Long: valor
-        }
-
-        class Puntaje <<ValueObject>> {
-            - Integer: valor
-        }
+package "Compartido" <<Rectangle>> {
+    class UsuarioId << (V,#99FF99) Value Object >> {
+        - valor: Long
     }
-
-    package AgregadoHistorialViajes {
-
-        class HistorialViajes <<AggregateRoot>> {
-            - HistorialId: id
-            - UsuarioId: usuarioId
-        }
-
-        class HistorialId <<ValueObject>> {
-            - Long: valor
-        }
-
-        class RegistroViaje <<Entity>> {
-            - RegistroViajeId: id
-            - ViajeId: viajeId
-        }
-
-        class RegistroViajeId <<ValueObject>> {
-            - Long: valor
-        }
-
-        class Ahorro <<Entity>> {
-            - AhorroId: id
-            - Decimal: monto
-        }
-
-        class AhorroId <<ValueObject>> {
-            - Long: valor
-        }
-
-        class AhorroCO2 <<Entity>> {
-            - AhorroCO2Id: id
-            - Decimal: kilogramos
-        }
-
-        class AhorroCO2Id <<ValueObject>> {
-            - Long: valor
-        }
+    class ViajeId << (V,#99FF99) Value Object >> {
+        - valor: Long
     }
 }
 
-package Compartido {
-
-    class UsuarioId <<ValueObject>> {
-        - Long: valor
+package "Agregado Calificacion" <<Rectangle>> {
+    class Calificacion << (E,#FF7700) Aggregate Root >> {
+        - id: CalificacionId
+        - usuarioCalificadoId: UsuarioCalificadoId
+        - puntaje: Puntaje
     }
 
-    class ViajeId <<ValueObject>> {
-        - Long: valor
+    class CalificacionId << (V,#99FF99) Value Object >> {
+        - valor: Long
     }
 
+    class UsuarioCalificadoId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+
+    class Puntaje << (V,#99FF99) Value Object >> {
+        - valor: Integer
+    }
 }
 
-Calificacion --> CalificacionId
-Calificacion --> UsuarioCalificadoId
-Calificacion --> Puntaje
+package "Agregado Historial Viajes" <<Rectangle>> {
+    class HistorialViajes << (E,#FF7700) Aggregate Root >> {
+        - id: HistorialId
+        - usuarioId: UsuarioId
+        + registrarViajeCompletado(viajeId: ViajeId, ahorroMonto: Decimal, co2Kilogramos: Decimal)
+    }
 
-HistorialViajes --> HistorialId
-HistorialViajes --> UsuarioId
+    class HistorialId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
 
-HistorialViajes "1" *--> "*" RegistroViaje
-HistorialViajes "1" *--> "*" Ahorro
-HistorialViajes "1" *--> "*" AhorroCO2
+    class RegistroViaje << (E,#1199FF) Entity >> {
+        - id: RegistroViajeId
+        - viajeId: ViajeId
+    }
 
-RegistroViaje --> RegistroViajeId
-RegistroViaje --> ViajeId
+    class RegistroViajeId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
 
-Ahorro --> AhorroId
-AhorroCO2 --> AhorroCO2Id
+    class Ahorro << (E,#1199FF) Entity >> {
+        - id: AhorroId
+        - monto: Decimal
+    }
+
+    class AhorroId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+
+    class AhorroCO2 << (E,#1199FF) Entity >> {
+        - id: AhorroCO2Id
+        - kilogramos: Decimal
+    }
+
+    class AhorroCO2Id << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+}
+
+' Relaciones del Agregado Historial
+HistorialViajes "1" *--> "*" RegistroViaje : contiene >
+HistorialViajes "1" *--> "*" Ahorro : acumula >
+HistorialViajes "1" *--> "*" AhorroCO2 : calcula >
+
+' Vinculaciones externas usando IDs compartidos
+Calificacion ..> UsuarioCalificadoId : evalúa a >
+HistorialViajes ..> UsuarioId : pertenece a >
+RegistroViaje ..> ViajeId : referencia a >
 
 @enduml

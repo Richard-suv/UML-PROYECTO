@@ -1,15 +1,17 @@
-@startuml "Business Case: RutaFlex"
+@startuml "Business Case: RutaFlex - DDD Aligned"
 left to right direction
 
-actor "Estudiante conductor" <<Business Worker>> as Driver
-actor "Estudiante pasajero" <<Business Worker>> as Passenger
+actor "Estudiante Conductor" <<Domain Actor>> as Driver
+actor "Estudiante Pasajero" <<Domain Actor>> as Passenger
 
-usecase "Gestionar\nviajes compartidos" as BUC1
-usecase "Publicar\nruta" as BUC2
-usecase "Buscar\nviaje" as BUC3
-usecase "Coordinar\ntrayecto" as BUC4
-usecase "Valorar\nexperiencia" as BUC5
-usecase "Consultar\nhistorial y ahorro" as BUC7
+rectangle "Capacidades del Dominio Principal" {
+    usecase "Orquestar Viajes Compartidos\n(Core Domain)" as BUC1
+    usecase "Ofrecer Itinerario de Ruta" as BUC2
+    usecase "Adquirir Cupo de Viaje" as BUC3
+    usecase "Sincronizar Coordinación de Trayecto" as BUC4
+    usecase "Evaluar Reputación del Actor" as BUC5
+    usecase "Monitorear Indicadores de Impacto\n(Ahorro y CO2)" as BUC7
+}
 
 Driver --> BUC1
 Passenger --> BUC1
@@ -22,7 +24,6 @@ Passenger --> BUC4
 Driver --> BUC5
 Passenger --> BUC5
 
-
 Passenger --> BUC7
 Driver --> BUC7
 
@@ -33,15 +34,14 @@ BUC5 --> BUC1 : <<include>>
 BUC7 --> BUC1 : <<include>>
 
 skinparam usecase {
-  BackgroundColor #C7F4FF
-  BorderColor #7A1631
+  BackgroundColor #E8F5E9
+  BorderColor #2E7D32
 }
 skinparam actor {
-  BackgroundColor #C7F4FF
-  BorderColor #7A1631
+  BackgroundColor #E8F5E9
+  BorderColor #2E7D32
 }
 skinparam Arrow {
-  Color #7A1631
+  Color #2E7D32
 }
-
 @enduml

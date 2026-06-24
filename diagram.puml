@@ -1,32 +1,34 @@
-@startuml ""
-skinparam SwimlaneTitleBackgroundColor #EEE
-skinparam ActivityBackgroundColor #FFF9C4
-skinparam ActivityBorderColor #7A1631
+@startuml "Proceso de Dominio: Verificación de Credenciales"
+skinparam SwimlaneTitleBackgroundColor #F5F5F5
+skinparam ActivityBackgroundColor #E8F5E9
+skinparam ActivityBorderColor #2E7D32
 skinparam Arrow {
-  Color #7A1631
+  Color #2E7D32
 }
 
-|Persona|
+|Estudiante|
 start
-:Solicita Producto;
+:Solicitar Registro en Plataforma;
+:Ingresar Correo Institucional;
 
-|Almacenero|
-:Consulta stock;
+|Contexto Gestión de Usuarios|
+:Analizar Dominio del Correo;
 
-if (Existe) then (Sí)
-  :Registra salida de Producto;
-  |Persona|
-  :Recibe Producto;
+if (¿Es Correo Universitario Válido?) then (Sí)
+  :Generar Token de Verificación Unico;
+  :Disparar Evento: TokenDeValidaciónCreado;
+  |Servicio de Mensajería Externo|
+  :Despachar Correo con Enlace Seguro;
+  |Estudiante|
+  :Acceder al Enlace de Validación;
+  |Contexto Gestión de Usuarios|
+  :Mutar Estado: CredencialMarcadaComoVerificada;
+  :Habilitar Acceso Completo al Ecosistema;
   stop
 else (No)
-  |Almacenero|
-  :Solicita Producto al Proveedor;
-  |Proveedor|
-  :Recepciona solicitud;
-  :Envia Producto;
-  |Almacenero|
-  :Recepciona Producto;
-  :Actualiza stock;
+  |Contexto Gestión de Usuarios|
+  :Rechazar Solicitud de Registro;
+  :Emitir Alerta de Restricción de Dominio;
   stop
 endif
 @enduml

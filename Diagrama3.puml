@@ -1,18 +1,17 @@
-
 @startuml
-title Diagrama de Caso de Uso de Negocio - RutaFlex
+title Contexto de Gestión de Viajes - Casos de Uso del Dominio
 
 skinparam packageStyle rectangle
 
-actor "Estudiante pasajero" as Pasajero
-actor "Estudiante conductor" as Conductor
+actor "Estudiante Pasajero" as Pasajero
+actor "Estudiante Conductor" as Conductor
 
-rectangle "Negocio: Buscar Viaje" {
-  usecase "Buscar viajes\npor destino" as UC1
-  usecase "Filtrar por hora" as UC2
-  usecase "Ver detalles\ndel viaje" as UC3
-  usecase "Consultar reputación" as UC4
-  usecase "Contactar conductor" as UC5
+rectangle "Bounded Context: Gestión de Viajes" {
+  usecase "Consultar Catálogo de Viajes por Destino" as UC1
+  usecase "Filtrar Ofertas por Ventana Horaria" as UC2
+  usecase "Inspeccionar Invariantes y Detalles del Viaje" as UC3
+  usecase "Verificar Reputación de Actores Asociados" as UC4
+  usecase "Establecer Canal de Comunicación Directo" as UC5
 }
 
 Pasajero --> UC1

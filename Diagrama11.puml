@@ -1,109 +1,114 @@
 @startuml
+title Esquema de Base de Datos Relacional - Desacoplado por Contextos DDD
 
-entity "users" as users {
-  * id : INT
-  --
-  first_name : varchar
-  last_name : varchar
-  institutional_email : varchar
-  phone : varchar
-  status : varchar
+' ==========================================
+' ESQUEMA: GESTIÓN DE USUARIOS
+' ==========================================
+package "Esquema: Contexto Usuarios" {
+  entity "users" as users {
+    * id : INT <<PK>> (UsuarioId)
+    --
+    first_name : varchar
+    last_name : varchar
+    institutional_email : varchar
+    phone : varchar
+    status : varchar
+  }
+
+  entity "profiles" as profiles {
+    * id : INT <<PK>>
+    --
+    user_id : INT <<FK>>
+    photo_url : varchar
+    bio : text
+    university_name : varchar
+  }
 }
 
-entity "profiles" as profiles {
-  * id : INT
-  --
-  user_id : INT <<FK>>
-  photo_url : varchar
-  bio : text
-  university_name : varchar
+' ==========================================
+' ESQUEMA: GESTIÓN DE VIAJES
+' ==========================================
+package "Esquema: Contexto Viajes" {
+  entity "trips" as trips {
+    * id : INT <<PK>> (ViajeId)
+    --
+    driver_user_id : INT <<Logical Link>>  ' Enlace lógico, no FK física
+    origin : varchar
+    destination : varchar
+    departure_time : datetime
+    shared_cost : decimal
+    available_seats : int
+    status : varchar
+  }
+
+  entity "trip_details" as trip_details {
+    * id : INT <<PK>>
+    --
+    trip_id : INT <<FK>>
+    meeting_point : varchar
+    description : text
+  }
 }
 
-entity "trips" as trips {
-  * id : INT
-  --
-  driver_user_id : INT <<FK>>
-  origin : varchar
-  destination : varchar
-  departure_time : datetime
-  shared_cost : decimal
-  available_seats : int
-  status : varchar
+' ==========================================
+' ESQUEMA: COMUNICACIÓN
+' ==========================================
+package "Esquema: Contexto Comunicación" {
+  entity "chats" as chats {
+    * id : INT <<PK>>
+    --
+    trip_id : INT <<Logical Link>>
+    status : varchar
+    created_at : datetime
+  }
+
+  entity "messages" as messages {
+    * id : INT <<PK>>
+    --
+    chat_id : INT <<FK>>
+    sender_user_id : INT <<Logical Link>>
+    content : text
+    sent_at : datetime
+    read_flag : boolean
+  }
 }
 
-entity "trip_details" as trip_details {
-  * id : INT
-  --
-  trip_id : INT <<FK>>
-  meeting_point : varchar
-  description : text
+' ==========================================
+' ESQUEMA: SEGURIDAD E HISTORIAL
+' ==========================================
+package "Esquema: Contexto Seguridad Historial" {
+  entity "ratings" as ratings {
+    * id : INT <<PK>>
+    --
+    trip_id : INT <<Logical Link>>
+    sender_user_id : INT <<Logical Link>>
+    receiver_user_id : INT <<Logical Link>>
+    score : int
+    comment : text
+    created_at : datetime
+  }
+
+  entity "travel_history" as travel_history {
+    * id : INT <<PK>>
+    --
+    user_id : INT <<Logical Link>>
+    trip_id : INT <<Logical Link>>
+    registered_at : datetime
+  }
+
+  entity "savings" as savings {
+    * id : INT <<PK>>
+    --
+    history_id : INT <<FK>>
+    amount_saved : decimal
+    co2_saved : decimal
+  }
 }
 
-entity "chats" as chats {
-  * id : INT
-  --
-  trip_id : INT <<FK>>
-  status : varchar
-  created_at : datetime
-}
-
-entity "messages" as messages {
-  * id : INT
-  --
-  chat_id : INT <<FK>>
-  sender_user_id : INT <<FK>>
-  content : text
-  sent_at : datetime
-  read_flag : boolean
-}
-
-entity "ratings" as ratings {
-  * id : INT
-  --
-  trip_id : INT <<FK>>
-  sender_user_id : INT <<FK>>
-  receiver_user_id : INT <<FK>>
-  score : int
-  comment : text
-  created_at : datetime
-}
-
-entity "travel_history" as travel_history {
-  * id : INT
-  --
-  user_id : INT <<FK>>
-  trip_id : INT <<FK>>
-  registered_at : datetime
-}
-
-entity "savings" as savings {
-  * id : INT
-  --
-  history_id : INT <<FK>>
-  amount : decimal
-  currency : varchar
-}
-
-entity "co2_savings" as co2_savings {
-  * id : INT
-  --
-  history_id : INT <<FK>>
-  value : decimal
-  unit : varchar
-}
-
-users ||--|| profiles
-users ||--o{ trips : drives
-trips ||--|| trip_details
-trips ||--o{ chats
-chats ||--o{ messages
-users ||--o{ messages
-trips ||--o{ ratings
-users ||--o{ ratings : sends
-users ||--o{ ratings : receives
-users ||--o{ travel_history
-trips ||--o{ travel_history
-travel_history ||--o{ savings
-travel_history ||--o{ co2_savings
+' Relaciones físicas internas de cada contexto (Límites de consistencia)
+users "1" *-- "1" profiles : contiene >
+trips "1" *-- "1" trip_details : detalla >
+chats "1" *-- "0..*" messages : compone >
+travel_history "1" *-- "1" savings : calcula >
 
 @enduml

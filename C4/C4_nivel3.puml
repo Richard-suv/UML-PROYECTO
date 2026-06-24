@@ -4,11 +4,10 @@
 title RutaFlex - Component Diagram
 
 Container_Boundary(api, "Backend API") {
-
-    Component(usuarios, "Gestión de Usuarios", "Componente")
-    Component(viajes, "Gestión de Viajes", "Componente")
-    Component(comunicacion, "Comunicación", "Componente")
-    Component(historial, "Historial y Reputación", "Componente")
+    Component(usuarios, "Gestión de Usuarios", "Componente DDD")
+    Component(viajes, "Gestión de Viajes", "Componente DDD")
+    Component(comunicacion, "Comunicación", "Componente DDD")
+    Component(historial, "Historial y Reputación", "Componente DDD")
 }
 
 Rel(viajes, comunicacion, "Coordina viajes")

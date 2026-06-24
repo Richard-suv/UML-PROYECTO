@@ -1,59 +1,66 @@
-@startuml ""
+@startuml
+skinparam handwritten false
+skinparam monochrome false
+skinparam packageStyle rect
+skinparam shadowing false
 
-package GestionViajes {
+title Bounded Context: Gestión de Viajes
 
-    package AgregadoViaje {
-
-        class Viaje <<AggregateRoot>> {
-            - ViajeId: id
-            - ConductorId: conductorId
-            - Ruta: ruta
-        }
-
-        class ViajeId <<ValueObject>> {
-            - Long: valor
-        }
-
-        class ConductorId <<ValueObject>> {
-            - Long: valor
-        }
-
-        class Ruta <<Entity>> {
-            - RutaId: id
-            - Ubicacion: origen
-            - Ubicacion: destino
-            - DateTime: horaSalida
-        }
-
-        class RutaId <<ValueObject>> {
-            - Long: valor
-        }
-
-        class Ubicacion <<ValueObject>> {
-            - String: direccion
-        }
-
-        class DisponibilidadAsientos <<Entity>> {
-            - Integer: asientosDisponibles
-        }
+package "Compartido" <<Rectangle>> {
+    class UsuarioId << (V,#99FF99) Value Object >> {
+        - valor: Long
     }
 }
 
-package Compartido {
-
-    class UsuarioId <<ValueObject>> {
-        - Long: valor
+package "Agregado Viaje" <<Rectangle>> {
+    class Viaje << (E,#FF7700) Aggregate Root >> {
+        - id: ViajeId
+        - conductorId: ConductorId
+        + programarViaje(ruta: Ruta, asientosTotales: int)
+        + reservarAsiento()
     }
 
+    class ViajeId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+
+    class ConductorId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+
+    class Ruta << (E,#1199FF) Entity >> {
+        - id: RutaId
+        - origen: Ubicacion
+        - destino: Ubicacion
+        - horaSalida: DateTime
+    }
+
+    class RutaId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+
+    class Ubicacion << (V,#99FF99) Value Object >> {
+        - direccion: String
+    }
+
+    class DisponibilidadAsientos << (E,#1199FF) Entity >> {
+        - asientosDisponibles: Integer
+        + disminuirCupo()
+        + aumentarCupo()
+    }
 }
 
-Viaje --> ViajeId
-Viaje --> ConductorId
+' Relaciones internas del Agregado
+Viaje "1" *--> "1" Ruta : sigue >
+Viaje "1" *--> "1" DisponibilidadAsientos : controla >
 
-Viaje "1" *--> "1" Ruta
-Viaje "1" *--> "1" DisponibilidadAsientos
+' Relación externa por ID indirecto
+Viaje ..> ConductorId : operado por >
 
-Ruta --> RutaId
-Ruta --> Ubicacion
+note right of Viaje
+  El ConductorId hace referencia al
+  UsuarioId del contexto de Usuarios, 
+  respetando el desacoplamiento.
+end note
 
 @enduml

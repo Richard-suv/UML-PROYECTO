@@ -1,20 +1,111 @@
 @startuml
+skinparam handwritten false
+skinparam monochrome false
+skinparam packageStyle rect
+skinparam shadowing false
 
-class Usuario
-class Perfil
-class Ruta
-class Viaje
-class Chat
-class Mensaje
-class Calificacion
-class HistorialViaje
+title RutaFlex Nivel 4 - Modelo de Dominio DDD (Refactorizado)
 
-Usuario "1" -- "1" Perfil
-Usuario "1" -- "*" Ruta
-Ruta "1" -- "*" Viaje
-Viaje "1" -- "*" Chat
-Chat "1" -- "*" Mensaje
-Viaje "1" -- "*" Calificacion
-Usuario "1" -- "*" HistorialViaje
+package "Compartido (Shared Kernel)" <<Rectangle>> {
+    class UsuarioId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+    class ViajeId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+}
+
+package "Agregado Usuario" <<Rectangle>> {
+    class Usuario << (E,#FF7700) Aggregate Root >> {
+        - id: UsuarioId
+        - nombre: String
+        - correoInstitucional: String
+        + actualizarPerfil(biografia: String, foto: String)
+    }
+    class Perfil << (E,#1199FF) Entity >> {
+        - id: PerfilId
+        - biografia: String
+        - fotoPerfil: String
+    }
+    class PerfilId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+}
+
+package "Agregado Viaje" <<Rectangle>> {
+    class Viaje << (E,#FF7700) Aggregate Root >> {
+        - id: ViajeId
+        - conductorId: UsuarioId
+        + programarViaje(ruta: Ruta, asientos: int)
+    }
+    class Ruta << (E,#1199FF) Entity >> {
+        - id: RutaId
+        - origen: String
+        - destino: String
+        - horaSalida: DateTime
+    }
+    class RutaId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+}
+
+package "Agregado Chat" <<Rectangle>> {
+    class Chat << (E,#FF7700) Aggregate Root >> {
+        - id: ChatId
+        - viajeId: ViajeId
+        + enviarMensaje(remitente: UsuarioId, texto: String)
+    }
+    class Mensaje << (E,#1199FF) Entity >> {
+        - id: MensajeId
+        - remitenteId: UsuarioId
+        - contenido: String
+    }
+    class MensajeId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+}
+
+package "Agregado Calificacion" <<Rectangle>> {
+    class Calificacion << (E,#FF7700) Aggregate Root >> {
+        - id: CalificacionId
+        - viajeId: ViajeId
+        - evaluadorId: UsuarioId
+        - evaluadoId: UsuarioId
+        - puntaje: int
+    }
+    class CalificacionId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+}
+
+package "Agregado Historial Viajes" <<Rectangle>> {
+    class HistorialViajes << (E,#FF7700) Aggregate Root >> {
+        - id: HistorialId
+        - usuarioId: UsuarioId
+        + agregarRegistro(viaje: ViajeId)
+    }
+    class RegistroViaje << (E,#1199FF) Entity >> {
+        - id: RegistroViajeId
+        - viajeId: ViajeId
+    }
+    class RegistroViajeId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+}
+
+' Composiciones internas
+Usuario "1" *--> "1" Perfil : posee >
+Viaje "1" *--> "1" Ruta : contiene >
+Chat "1" *--> "*" Mensaje : almacena >
+HistorialViajes "1" *--> "*" RegistroViaje : registra >
+
+' Relaciones indirectas por ID (Desacopladas)
+Viaje ..> UsuarioId : "conductorId"
+Mensaje ..> UsuarioId : "remitenteId"
+Chat ..> ViajeId : "viajeId"
+Calificacion ..> ViajeId : "viajeId"
+Calificacion ..> UsuarioId : "evaluador / evaluado"
+HistorialViajes ..> UsuarioId : "usuarioId"
+RegistroViaje ..> ViajeId : "viajeId"
 
 @enduml

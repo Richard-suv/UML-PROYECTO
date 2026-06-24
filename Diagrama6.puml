@@ -1,32 +1,34 @@
 @startuml
-actor Conductor
-boundary "App RutaFlex" as App
-control "RutaController" as RutaC
-entity "RutaService" as RutaS
-database "BD RutaFlex" as DB
+actor "Estudiante Conductor" as Conductor
+boundary "Aplicación Móvil" as App
+control "API Gateway" as Gateway
+control "Caso de Uso:\nProgramarViajeHandler" as UC
+entity "Viaje (Aggregate Root)" as ViajeAR
+database "Viaje Repository" as Repo
 
-Conductor -> App : Ingresar a la app
-App -> RutaC : iniciarSesion(correo, contraseña)
-RutaC -> DB : validarUsuario()
-DB --> RutaC : usuario válido
-RutaC --> App : acceso concedido
+Conductor -> App : Solicitar acceso a la aplicación
+App -> Gateway : Validar token de sesión
+Gateway --> App : Identidad activa (UsuarioId)
 
-Conductor -> App : Publicar ruta
-App -> RutaC : registrarRuta(datosRuta)
-RutaC -> RutaS : crearRuta(datosRuta)
-RutaS -> DB : guardarRuta()
-DB --> RutaS : ruta registrada
-RutaS --> RutaC : confirmación
-RutaC --> App : mostrar éxito
+Conductor -> App : Rellenar y publicar nueva ruta
+App -> Gateway : POST /api/viajes (Command)
+Gateway -> UC : manejar(ProgramarViajeComando)
 
-Conductor -> App : Editar ruta
-App -> RutaC : actualizarRuta(rutaId, cambios)
-RutaC -> RutaS : modificarRuta()
-RutaS -> DB : actualizarRuta()
-DB --> RutaS : ruta actualizada
-RutaS --> RutaC : confirmación
-RutaC --> App : mostrar actualización
+create ViajeAR
+UC -> ViajeAR : crear(ViajeId, ConductorId, Ruta, Asientos)
+ViajeAR -> ViajeAR : validarInvariantesDeRuta()
 
-Conductor -> App : Ver rutas publicadas / chat / notificaciones
-App --> Conductor : Información disponible
+UC -> Repo : guardar(Viaje)
+Repo --> UC : Confirmación de persistencia exitosa
+UC --> Gateway : Evento: ViajeProgramado
+Gateway --> App : Mostrar confirmación en pantalla
+
+Conductor -> App : Modificar parámetros de la ruta
+App -> Gateway : PUT /api/viajes/{id} (Command)
+Gateway -> UC : manejar(ModificarRutaComando)
+UC -> Repo : buscarPorId(ViajeId)
+Repo --> UC : Agregado [Viaje]
+UC -> ViajeAR : mutarRuta(NuevosDatos)
+UC -> Repo : guardar(Viaje)
+Repo --> App : Actualización reflejada con éxito
 @enduml

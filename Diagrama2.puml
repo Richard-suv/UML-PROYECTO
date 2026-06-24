@@ -1,16 +1,18 @@
 @startuml
-start
-:Ingresar a la aplicación;
-:Autenticarse con correo universitario;
-:Ir a "Buscar viaje";
-:Ingresar destino y hora;
+title Flujo de Dominio: Adquisición y Búsqueda de Viaje
 
-if (¿Existen viajes disponibles?) then (Sí)
-  :Mostrar listado de viajes;
-  :Seleccionar un viaje;
-  :Ver detalles del viaje;
+start
+:Acceder a Canales de la Aplicación;
+:Autenticar Identidad Institucional;
+:Ejecutar Comando: Buscar Ofertas de Viaje;
+:Especificar Criterios de Destino y Ventana Horaria;
+
+if (¿Existen Ofertas Consistentes en el Dominio?) then (Sí)
+  :Publicar Catálogo de Itinerarios Disponibles;
+  :Seleccionar Itinerario Óptimo;
+  :Validar Reglas de Negocio del Viaje (Cupos y Restricciones);
 else (No)
-  :Mostrar mensaje de no disponibilidad;
+  :Disparar Evento: Notificar Inexistencia de Cupos;
 endif
 
 stop

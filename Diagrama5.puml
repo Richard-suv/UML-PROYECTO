@@ -1,33 +1,29 @@
 @startuml
-actor Pasajero
-boundary "App RutaFlex" as App
-control "AuthController" as Auth
-control "ViajeController" as ViajeC
-entity "ViajeService" as ViajeS
-database "BD RutaFlex" as DB
+actor "Estudiante Pasajero" as Pasajero
+boundary "Aplicación Móvil" as App
+control "API Gateway" as Gateway
+control "Caso de Uso:\nBuscarViajesHandler" as UC
+entity "Viaje (Aggregate Root)" as ViajeAR
+database "Viaje Repository" as Repo
 
-Pasajero -> App : Ingresar correo y contraseña
-App -> Auth : autenticar(correo, contraseña)
-Auth -> DB : validarUsuario()
-DB --> Auth : usuario válido
-Auth --> App : sesión creada
+Pasajero -> App : Autenticar credenciales
+App -> Gateway : POST /api/auth/login
+Gateway --> App : Sesión e Identidad Emitida (UsuarioId)
 
-Pasajero -> App : Buscar viajes
-App -> ViajeC : buscarViajes(destino, hora)
-ViajeC -> ViajeS : obtenerViajesFiltrados()
-ViajeS -> DB : consultarViajes()
-DB --> ViajeS : lista de viajes
-ViajeS --> ViajeC : resultados
-ViajeC --> App : mostrar listado
+Pasajero -> App : Buscar viajes por destino y hora
+App -> Gateway : GET /api/viajes?destino=...&hora=...
+Gateway -> UC : ejecutar(BuscarViajesConsulta)
+UC -> Repo : buscarPorCriterios(destino, hora)
+Repo --> UC : Lista de Agregados [Viaje]
+UC --> Gateway : ViajesDTO
+Gateway --> App : Renderizar catálogo de ofertas
 
-Pasajero -> App : Ver detalle de viaje
-App -> ViajeC : obtenerDetalle(viajeId)
-ViajeC -> ViajeS : detalleViaje(viajeId)
-ViajeS -> DB : consultarDetalle()
-DB --> ViajeS : detalle
-ViajeS --> ViajeC : detalle
-ViajeC --> App : mostrar detalle
-
-Pasajero -> App : Abrir chat / calificar / ver historial
-App --> Pasajero : Interacción disponible
+Pasajero -> App : Seleccionar e inspeccionar viaje
+App -> Gateway : GET /api/viajes/{id}
+Gateway -> UC : obtenerDetalle(ViajeId)
+UC -> Repo : buscarPorId(ViajeId)
+Repo -> ViajeAR : <<reconstituir>>
+ViajeAR --> UC : Instancia actual del Agregado
+UC --> Gateway : DetalleViajeDTO
+Gateway --> App : Desplegar invariantes y estados del viaje
 @enduml

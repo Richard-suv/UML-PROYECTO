@@ -1,57 +1,43 @@
-@startuml "Sistema RutaFlex"
+@startuml "Ecosistema de Casos de Uso - RutaFlex DDD"
 
 left to right direction
-
-skinparam usecase {
-  BackgroundColor #FFF9C4
-  BorderColor #7A1631
-  StereotypeFontColor #2E7D32
-}
-
-skinparam actor {
-  BackgroundColor #FFF9C4
-  BorderColor #7A1631
-  StereotypeFontColor #2E7D32
-}
-
-skinparam Arrow {
-  Color #7A1631
-}
 
 actor "Estudiante Pasajero" as Passenger
 actor "Estudiante Conductor" as Driver
 actor "Administrador" as Admin
 
 actor "Servicio de Correo\nInstitucional" as EmailService
-actor "Servicio de\nMapas" as MapsService
+actor "Servicio de Mapas\n(Google Maps)" as MapsService
 
-rectangle "Sistema RutaFlex" {
+rectangle "Fronteras del Sistema RutaFlex" {
 
-  usecase "Iniciar Sesión" as UC1
+  rectangle "Contexto: Gestión de Usuarios" {
+    usecase "Autenticar Identidad" as UC1
+    usecase "Actualizar Atributos del Perfil" as UC2
+    usecase "Moderar Cuentas y Permisos" as UC10
+  }
 
-  usecase "Gestionar Perfil" as UC2
+  rectangle "Contexto: Gestión de Viajes" {
+    usecase "Explorar Itinerarios" as UC3
+    usecase "Publicar Ruta de Viaje" as UC4
+    usecase "Monitorear Flujo de Cupos" as UC5
+  }
 
-  usecase "Buscar Viajes" as UC3
+  rectangle "Contexto: Comunicación" {
+    usecase "Intercambiar Mensajes en Chat" as UC6
+  }
 
-  usecase "Publicar Ruta" as UC4
-
-  usecase "Gestionar Viajes" as UC5
-
-  usecase "Enviar Mensajes" as UC6
-
-  usecase "Calificar Usuario" as UC7
-
-  usecase "Consultar Historial" as UC8
-
-  usecase "Consultar Ahorro" as UC9
-
-  usecase "Gestionar Usuarios" as UC10
-
+  rectangle "Contexto: Seguridad e Historial" {
+    usecase "Emitir Calificación de Experiencia" as UC7
+    usecase "Inspeccionar Historial de Trayectos" as UC8
+    usecase "Auditar Indicadores de Ahorro y CO2" as UC9
+  }
 }
 
 Passenger -- UC1
 Passenger -- UC2
 Passenger -- UC3
+Passenger -- UC5
 Passenger -- UC6
 Passenger -- UC7
 Passenger -- UC8
@@ -66,11 +52,10 @@ Driver -- UC7
 Driver -- UC8
 Driver -- UC9
 
-Admin -- UC1
 Admin -- UC10
 
-UC1 -- EmailService
-UC3 -- MapsService
-UC4 -- MapsService
+UC1 ..> EmailService : <<use>>
+UC4 ..> MapsService : <<use>>
+UC3 ..> MapsService : <<use>>
 
 @enduml

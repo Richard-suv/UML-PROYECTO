@@ -1,8 +1,5 @@
 @startuml
-
-
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
-
 
 title C4 - Diagrama de Contexto - RutaFlex
 
@@ -23,6 +20,5 @@ Rel(admin, rutaflex, "Gestiona la plataforma")
 Rel(rutaflex, firebase, "Envía notificaciones")
 Rel(rutaflex, googlemaps, "Obtiene rutas y ubicaciones")
 Rel(rutaflex, emailservice, "Verifica correos institucionales")
-
 
 @enduml

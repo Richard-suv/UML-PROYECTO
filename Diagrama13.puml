@@ -2,86 +2,67 @@
 
 skinparam linetype ortho
 
-node "Aplicación Móvil\n(Android / iOS)" as MobileApp
+node "Dispositivo Cliente Móvil\n(Flutter)" as MobileApp
+node "Cliente Web (Landing / React)" as Browser
+node "AWS API Gateway" as ApiGateway
 
-node "Navegador Web" as Browser
-
-node "API Gateway" as ApiGateway
-
-node "AWS ECS - Gestión de Usuarios" as UsersContainer {
-
+node "AWS ECS Cluster - Contexto Usuarios" as UsersContainer {
     artifact "UsersMicroservice.jar" {
-
         component "Capa de Interfaz" as UsersInterface
         component "Capa de Aplicación" as UsersApplication
         component "Capa de Dominio" as UsersDomain
         component "Capa de Infraestructura" as UsersInfrastructure
-
     }
 }
 
-node "AWS ECS - Gestión de Viajes" as TripsContainer {
-
+node "AWS ECS Cluster - Contexto Viajes" as TripsContainer {
     artifact "TripsMicroservice.jar" {
-
         component "Capa de Interfaz" as TripsInterface
         component "Capa de Aplicación" as TripsApplication
         component "Capa de Dominio" as TripsDomain
         component "Capa de Infraestructura" as TripsInfrastructure
-
     }
 }
 
-node "AWS ECS - Comunicación" as CommunicationContainer {
-
+node "AWS ECS Cluster - Contexto Comunicación" as CommunicationContainer {
     artifact "CommunicationMicroservice.jar" {
-
         component "Capa de Interfaz" as CommInterface
         component "Capa de Aplicación" as CommApplication
         component "Capa de Dominio" as CommDomain
         component "Capa de Infraestructura" as CommInfrastructure
-
     }
 }
 
-node "AWS ECS - Seguridad e Historial" as TrustHistoryContainer {
-
+node "AWS ECS Cluster - Contexto Seguridad e Historial" as TrustHistoryContainer {
     artifact "TrustHistoryMicroservice.jar" {
-
         component "Capa de Interfaz" as TrustInterface
         component "Capa de Aplicación" as TrustApplication
         component "Capa de Dominio" as TrustDomain
         component "Capa de Infraestructura" as TrustInfrastructure
-
     }
 }
 
-database "Base de Datos\nRutaFlex" as RutaFlexDB
+database "AWS RDS MySQL\n(Bases de Datos Desacopladas)" as RutaFlexDB
 
 cloud "Servicio de Correo\nInstitucional" as EmailService
-
 cloud "Servicio de\nNotificaciones Push" as PushService
-
 cloud "Servicio de Mapas\ny Geolocalización" as MapsService
 
-MobileApp --> ApiGateway : HTTPS
+MobileApp --> ApiGateway : HTTPS / WSS
 Browser --> ApiGateway : HTTPS
 
-ApiGateway --> UsersContainer : HTTPS
-ApiGateway --> TripsContainer : HTTPS
-ApiGateway --> CommunicationContainer : HTTPS
-ApiGateway --> TrustHistoryContainer : HTTPS
+ApiGateway --> UsersContainer : HTTPS / RPC
+ApiGateway --> TripsContainer : HTTPS / RPC
+ApiGateway --> CommunicationContainer : HTTPS / RPC
+ApiGateway --> TrustHistoryContainer : HTTPS / RPC
 
-UsersContainer --> RutaFlexDB : TCP/IP
-TripsContainer --> RutaFlexDB : TCP/IP
-CommunicationContainer --> RutaFlexDB : TCP/IP
-TrustHistoryContainer --> RutaFlexDB : TCP/IP
+UsersInfrastructure --> RutaFlexDB : JDBC
+TripsInfrastructure --> RutaFlexDB : JDBC
+CommInfrastructure --> RutaFlexDB : JDBC
+TrustInfrastructure --> RutaFlexDB : JDBC
 
-UsersContainer --> EmailService : HTTPS
-
-CommunicationContainer --> PushService : HTTPS
-
-TripsContainer --> MapsService : HTTPS
-CommunicationContainer --> MapsService : HTTPS
+UsersInfrastructure --> EmailService : HTTPS
+CommInfrastructure --> PushService : HTTPS
+TripsInfrastructure --> MapsService : HTTPS
 
 @enduml

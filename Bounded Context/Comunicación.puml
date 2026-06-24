@@ -1,65 +1,62 @@
-@startuml ""
+@startuml
+skinparam handwritten false
+skinparam monochrome false
+skinparam packageStyle rect
+skinparam shadowing false
 
-package Comunicacion {
+title Bounded Context: Comunicación
 
-    package AgregadoChat {
-
-        class Chat <<AggregateRoot>> {
-            - ChatId: id
-            - ViajeId: viajeId
-        }
-
-        class ChatId <<ValueObject>> {
-            - Long: valor
-        }
-
-        class Mensaje <<Entity>> {
-            - MensajeId: id
-            - UsuarioId: remitenteId
-            - ContenidoMensaje: contenido
-        }
-
-        class MensajeId <<ValueObject>> {
-            - Long: valor
-        }
-
-        class ContenidoMensaje <<ValueObject>> {
-            - String: valor
-        }
-
-        class Notificacion <<Entity>> {
-            - NotificacionId: id
-            - String: tipo
-        }
-
-        class NotificacionId <<ValueObject>> {
-            - Long: valor
-        }
+package "Compartido" <<Rectangle>> {
+    class UsuarioId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+    class ViajeId << (V,#99FF99) Value Object >> {
+        - valor: Long
     }
 }
 
-package Compartido {
-
-    class UsuarioId <<ValueObject>> {
-        - Long: valor
+package "Agregado Chat" <<Rectangle>> {
+    class Chat << (E,#FF7700) Aggregate Root >> {
+        - id: ChatId
+        - viajeId: ViajeId
+        + enviarMensaje(remitenteId: UsuarioId, contenido: ContenidoMensaje)
+        + generarNotificacion(tipo: String)
     }
 
-    class ViajeId <<ValueObject>> {
-        - Long: valor
+    class ChatId << (V,#99FF99) Value Object >> {
+        - valor: Long
     }
 
+    class Mensaje << (E,#1199FF) Entity >> {
+        - id: MensajeId
+        - remitenteId: UsuarioId
+        - contenido: ContenidoMensaje
+    }
+
+    class MensajeId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
+
+    class ContenidoMensaje << (V,#99FF99) Value Object >> {
+        - valor: String
+    }
+
+    class Notificacion << (E,#1199FF) Entity >> {
+        - id: NotificacionId
+        - tipo: String
+    }
+
+    class NotificacionId << (V,#99FF99) Value Object >> {
+        - valor: Long
+    }
 }
 
-Chat --> ChatId
-Chat --> ViajeId
+' Relaciones de Composición internas del Agregado
+Chat "1" *--> "1..*" Mensaje : administra >
+Chat "1" *--> "*" Notificacion : dispara >
 
-Chat "1" *--> "1..*" Mensaje
-Chat "1" *--> "*" Notificacion
-
-Mensaje --> MensajeId
-Mensaje --> ContenidoMensaje
-Mensaje --> UsuarioId
-
-Notificacion --> NotificacionId
-
+' Relaciones por ID hacia el exterior (Contextos Compartidos)
+Chat ..> ViajeId : asociado a >
+Mensaje ..> UsuarioId : enviado por >
+Notificacion ..> UsuarioId : destinataria >
 @enduml

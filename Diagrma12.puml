@@ -1,83 +1,70 @@
-@startuml ""
+@startuml "Arquitectura de Capas de Dominio - RutaFlex"
 skinparam componentStyle uml2
 skinparam linetype ortho
 left to right direction
 
-interface "Contrato" as Contrato
+interface "Contrato API (OpenAPI)" as Contrato
 
-component "API RutaFlex" as API {
+component "Ecosistema API RutaFlex" as API {
 
-  component "Contexto Delimitado de Gestión de Usuarios" as BC_Usuarios {
-
-    component "Capa de Interfaz" as U_Interfaz
-    component "Capa de Aplicación" as U_Aplicacion
-    component "Capa de Dominio" as U_Dominio
-    component "Capa de Infraestructura" as U_Infraestructura
-
+  component "Contexto Delimitado: Usuarios" as BC_Usuarios {
+    component "Capa de Interfaz (Primary Adapters)" as U_Interfaz
+    component "Capa de Aplicación (Use Cases)" as U_Aplicacion
+    component "Capa de Dominio (Model / Entities)" as U_Dominio
+    component "Capa de Infraestructura (Secondary Adapters)" as U_Infraestructura
   }
 
-  component "Contexto Delimitado de Gestión de Viajes" as BC_Viajes {
-
+  component "Contexto Delimitado: Viajes" as BC_Viajes {
     component "Capa de Interfaz" as T_Interfaz
     component "Capa de Aplicación" as T_Aplicacion
     component "Capa de Dominio" as T_Dominio
     component "Capa de Infraestructura" as T_Infraestructura
-
   }
 
-  component "Contexto Delimitado de Comunicación" as BC_Comunicacion {
-
+  component "Contexto Delimitado: Comunicación" as BC_Comunicacion {
     component "Capa de Interfaz" as C_Interfaz
     component "Capa de Aplicación" as C_Aplicacion
     component "Capa de Dominio" as C_Dominio
     component "Capa de Infraestructura" as C_Infraestructura
-
   }
 
-  component "Contexto Delimitado de Seguridad e Historial" as BC_SeguridadHistorial {
-
+  component "Contexto Delimitado: Seguridad e Historial" as BC_SeguridadHistorial {
     component "Capa de Interfaz" as SH_Interfaz
     component "Capa de Aplicación" as SH_Aplicacion
     component "Capa de Dominio" as SH_Dominio
     component "Capa de Infraestructura" as SH_Infraestructura
-
   }
 }
 
-database "Base de Datos Relacional" as BaseDatosRelacional <<external>>
-
-component "Servicio de Correo Institucional" as ServicioCorreo <<external>>
-
-component "Servicio de Notificaciones Push" as ServicioNotificaciones <<external>>
-
-component "Servicio de Mapas y Geolocalización" as ServicioMapas <<external>>
+database "Persistencia Relacional" as BaseDatosRelacional <<external>>
+component "Gateway Correo Institucional" as ServicioCorreo <<external>>
+component "Firebase Push Service" as ServicioNotificaciones <<external>>
+component "Google Maps Core" as ServicioMapas <<external>>
 
 API --> Contrato
 
+' Flujos internos de dependencias limpias (Hacia el centro/Dominio)
 U_Interfaz ..> U_Aplicacion
 U_Aplicacion ..> U_Dominio
-U_Aplicacion ..> U_Infraestructura
+U_Infraestructura ..> U_Dominio
+U_Infraestructura --> BaseDatosRelacional
+U_Infraestructura --> ServicioCorreo
 
 T_Interfaz ..> T_Aplicacion
 T_Aplicacion ..> T_Dominio
-T_Aplicacion ..> T_Infraestructura
+T_Infraestructura ..> T_Dominio
+T_Infraestructura --> BaseDatosRelacional
+T_Infraestructura --> ServicioMapas
 
 C_Interfaz ..> C_Aplicacion
 C_Aplicacion ..> C_Dominio
-C_Aplicacion ..> C_Infraestructura
+C_Infraestructura ..> C_Dominio
+C_Infraestructura --> BaseDatosRelacional
+C_Infraestructura --> ServicioNotificaciones
 
 SH_Interfaz ..> SH_Aplicacion
 SH_Aplicacion ..> SH_Dominio
-SH_Aplicacion ..> SH_Infraestructura
-
-U_Infraestructura ..> BaseDatosRelacional
-T_Infraestructura ..> BaseDatosRelacional
-C_Infraestructura ..> BaseDatosRelacional
-SH_Infraestructura ..> BaseDatosRelacional
-
-U_Infraestructura ..> ServicioCorreo
-C_Infraestructura ..> ServicioNotificaciones
-T_Infraestructura ..> ServicioMapas
-C_Infraestructura ..> ServicioMapas
+SH_Infraestructura ..> SH_Dominio
+SH_Infraestructura --> BaseDatosRelacional
 
 @enduml
