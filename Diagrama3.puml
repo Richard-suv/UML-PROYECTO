@@ -1,6 +1,6 @@
 
 @startuml
-title Diagrama de Caso de Uso de Negocio - RutaFlex
+title Diagrama de Caso de Uso de Negocio del producto de software - RutaFlex
 
 skinparam packageStyle rectangle
 
