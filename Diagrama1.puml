@@ -1,15 +1,15 @@
 @startuml "Business Case: RutaFlex"
 left to right direction
 
-actor "Estudiante conductor" <<Business Worker>> as Driver
-actor "Estudiante pasajero" <<Business Worker>> as Passenger
+actor/ "Estudiante conductor" <<Business Worker>> as Driver
+actor/ "Estudiante pasajero" <<Business Worker>> as Passenger
 
-usecase "Gestionar\nviajes compartidos" as BUC1
-usecase "Publicar\nruta" as BUC2
-usecase "Buscar\nviaje" as BUC3
-usecase "Coordinar\ntrayecto" as BUC4
-usecase "Valorar\nexperiencia" as BUC5
-usecase "Consultar\nhistorial y ahorro" as BUC7
+usecase/ "Gestionar\nviajes compartidos" as BUC1
+usecase/ "Publicar\nruta" as BUC2
+usecase/ "Buscar\nviaje" as BUC3
+usecase/ "Coordinar\ntrayecto" as BUC4
+usecase/ "Valorar\nexperiencia" as BUC5
+usecase/ "Consultar\nhistorial y ahorro" as BUC7
 
 Driver --> BUC1
 Passenger --> BUC1
